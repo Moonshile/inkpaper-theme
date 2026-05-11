@@ -1,0 +1,14 @@
+{
+  "name": "inkpaper-vitepress-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "@inkpaper/vitepress": "workspace:*",
+    "vitepress": "^1.6.4"
+  }
+}
