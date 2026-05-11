@@ -1,8 +1,8 @@
 ---
 import { getCollection } from 'astro:content'
-import ArticleLayout from '@inkpaper/astro/components/ArticleLayout.astro'
-import { getSortedPosts } from '@inkpaper/astro/utils/posts.ts'
-import { getSidebarItems } from '@inkpaper/astro/utils/sidebar.ts'
+import ArticleLayout from '../../components/ArticleLayout.astro'
+import { getSortedPosts } from '../../utils/posts.ts'
+import { getSidebarItems } from '../../utils/sidebar.ts'
 import config from 'virtual:inkpaper-config'
 
 export async function getStaticPaths() {

@@ -21,7 +21,24 @@ export default function inkpaper(config: InkpaperConfig = {}): AstroIntegration 
   return {
     name: '@inkpaper/astro',
     hooks: {
-      'astro:config:setup'({ updateConfig }) {
+      'astro:config:setup'({ injectRoute, updateConfig }) {
+        injectRoute({
+          pattern: '/',
+          entrypoint: '@inkpaper/astro/pages/index.astro',
+        })
+        injectRoute({
+          pattern: '/archive',
+          entrypoint: '@inkpaper/astro/pages/archive.astro',
+        })
+        injectRoute({
+          pattern: '/tags',
+          entrypoint: '@inkpaper/astro/pages/tags.astro',
+        })
+        injectRoute({
+          pattern: '/posts/[...slug]',
+          entrypoint: '@inkpaper/astro/pages/posts/[...slug].astro',
+        })
+
         updateConfig({
           vite: {
             plugins: [
@@ -38,6 +55,12 @@ export default function inkpaper(config: InkpaperConfig = {}): AstroIntegration 
               },
             ],
           },
+        })
+      },
+      'astro:config:done'({ injectTypes }) {
+        injectTypes({
+          filename: 'inkpaper.d.ts',
+          content: `declare module 'virtual:inkpaper-config' {\n  const config: Required<import('@inkpaper/astro').InkpaperConfig>\n  export default config\n}`,
         })
       },
     },

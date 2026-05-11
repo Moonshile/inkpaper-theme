@@ -94,9 +94,24 @@ inkpaper({
 })
 ```
 
+## Automatic Route Injection
+
+The Astro version uses the `injectRoute` API to automatically inject four default page routes:
+
+| Route | Page |
+|-------|------|
+| `/` | Home |
+| `/archive` | Archive |
+| `/tags` | Tags |
+| `/posts/[...slug]` | Article detail |
+
+Users don't need to create any page files manually. To customize a specific page, create a file with the same name under `src/pages/` to override the default route — Astro's route priority mechanism ensures user-defined routes take precedence.
+
+TypeScript type declarations for the `virtual:inkpaper-config` virtual module are also automatically injected via the `injectTypes` API — no need to declare them manually in `env.d.ts`.
+
 ## Content Collection
 
-The Astro version uses Content Collections instead of VitePress's content loader. The theme provides `postSchema` (Zod schema) and `getSortedPosts` utility:
+The Astro version uses Content Collections to manage posts. This is currently the only file users need to create manually — Astro doesn't yet provide an API for integrations to inject content collection config.
 
 ```ts
 // src/content/config.ts
@@ -118,8 +133,8 @@ The theme is split into four npm packages:
 
 **@inkpaper/vitepress** depends on core and adds Vue components, Layout, data injection, the sidebar config function, and the content loader.
 
-**@inkpaper/astro** depends on core and adds Astro components, Layout, Astro integration, sidebar generation, and content collection schema.
+**@inkpaper/astro** depends on core and adds the Astro integration (automatic route and type injection), Astro components, Layout, sidebar generation, and content collection schema.
 
-**@inkpaper/create-for-vitepress** is the scaffolding tool for VitePress projects.
+**@inkpaper/create-for-vitepress** is the scaffolding tool for VitePress projects. The Astro version doesn't need one — the integration itself includes all default pages.
 
 Both framework versions share all CSS from `@inkpaper/core`. Only the component layer is implemented separately.

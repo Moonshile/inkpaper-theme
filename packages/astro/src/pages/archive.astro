@@ -1,8 +1,8 @@
 ---
-import BaseLayout from '@inkpaper/astro/components/BaseLayout.astro'
-import ArchivePage from '@inkpaper/astro/components/ArchivePage.astro'
-import { getSortedPosts } from '@inkpaper/astro/utils/posts.ts'
-import { getSidebarItems } from '@inkpaper/astro/utils/sidebar.ts'
+import BaseLayout from '../components/BaseLayout.astro'
+import ArchivePage from '../components/ArchivePage.astro'
+import { getSortedPosts } from '../utils/posts.ts'
+import { getSidebarItems } from '../utils/sidebar.ts'
 import config from 'virtual:inkpaper-config'
 
 const posts = await getSortedPosts(config.postsBase)

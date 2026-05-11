@@ -19,9 +19,42 @@ npm run dev
 
 ### Astro
 
+1. 安装：
+
 ```bash
 npm install @inkpaper/astro
 ```
+
+2. 配置 `astro.config.mjs`：
+
+```ts
+import { defineConfig } from 'astro/config'
+import inkpaper from '@inkpaper/astro'
+
+export default defineConfig({
+  integrations: [
+    inkpaper({
+      title: 'My Blog',
+      description: 'A personal journal',
+    }),
+  ],
+})
+```
+
+3. 创建 `src/content/config.ts`：
+
+```ts
+import { defineCollection } from 'astro:content'
+import { postSchema } from '@inkpaper/astro/content'
+
+export const collections = {
+  posts: defineCollection({ type: 'content', schema: postSchema }),
+}
+```
+
+4. 在 `src/content/posts/` 下写文章，启动 `npm run dev` 即可。
+
+集成会自动注入首页、归档、标签、文章详情四个路由，无需手动创建页面文件。
 
 详细配置见示例站点源码：[examples/vitepress](./examples/vitepress) | [examples/astro](./examples/astro)
 
@@ -33,7 +66,8 @@ npm install @inkpaper/astro
 - **首页/归档/标签** — 三个开箱即用的页面组件
 - **文章侧边栏** — 字数统计、阅读时间、标签、相关文章推荐
 - **共享设计系统** — `@inkpaper/core` 提供统一的色彩、排版、纹理，两套框架实现视觉一致
-- **脚手架工具** — `npx @inkpaper/create-for-vitepress` 一键初始化 VitePress 项目
+- **Astro 路由自动注入** — 集成自动注入默认页面路由，无需脚手架
+- **VitePress 脚手架工具** — `npx @inkpaper/create-for-vitepress` 一键初始化 VitePress 项目
 
 ## 包结构
 
@@ -41,7 +75,7 @@ npm install @inkpaper/astro
 |---|------|
 | `@inkpaper/core` | 纯 CSS 设计变量、纹理、排版、通用组件样式，框架无关 |
 | `@inkpaper/vitepress` | VitePress 主题：Vue 组件、Layout、侧边栏配置、内容加载器 |
-| `@inkpaper/astro` | Astro 主题：Astro 组件、集成、侧边栏配置 |
+| `@inkpaper/astro` | Astro 主题：集成（自动注入路由和类型）、Astro 组件、侧边栏配置 |
 | `@inkpaper/create-for-vitepress` | VitePress 项目脚手架工具 |
 
 安装 `@inkpaper/vitepress` 或 `@inkpaper/astro`，core 会作为依赖自动装上。

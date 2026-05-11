@@ -7,7 +7,8 @@
     ".": "./src/index.ts",
     "./content": "./src/content.ts",
     "./utils/*": "./src/utils/*",
-    "./components/*": "./src/components/*"
+    "./components/*": "./src/components/*",
+    "./pages/*": "./src/pages/*"
   },
   "files": [
     "src"

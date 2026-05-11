@@ -46,6 +46,8 @@ export default defineConfig({
 
 `title` and `description` are displayed as the home page title and tagline.
 
+The integration automatically injects routes for the home, archive, tags, and article pages — no need to create page files manually.
+
 ### 2. Content Collection
 
 The Astro version uses Content Collections to manage posts. Define the schema in `src/content/config.ts`:
@@ -74,32 +76,15 @@ Post content goes here.
 
 `date` determines sort order. `tags` are used for the tags page filter and related-article recommendations. Subdirectories for categorization are supported.
 
-### 3. Page Files
+### 3. Start
 
-Astro uses file-based routing — no `.astro` file means no URL. The theme provides components but can't register routes automatically. You need to create the corresponding page files to mount them.
-
-`src/pages/index.astro`:
-
-```astro
----
-import BaseLayout from '@inkpaper/astro/components/BaseLayout.astro'
-import HomeLayout from '@inkpaper/astro/components/HomeLayout.astro'
-import { getSortedPosts } from '@inkpaper/astro/utils/posts.ts'
-import { getSidebarItems } from '@inkpaper/astro/utils/sidebar.ts'
-import config from 'virtual:inkpaper-config'
-
-const posts = await getSortedPosts(config.postsBase)
-const sidebarItems = await getSidebarItems('home', config.sidebar, config.postsBase)
----
-
-<BaseLayout title={config.title} description={config.description} nav={config.nav} sidebarItems={sidebarItems} currentPath={Astro.url.pathname}>
-  <HomeLayout posts={posts} title={config.title} description={config.description} />
-</BaseLayout>
+```bash
+npm run dev
 ```
 
-Archive and tags pages follow the same pattern with their respective components. Article pages use a dynamic route at `src/pages/posts/[...slug].astro`.
+Open the browser and you'll see your site with the inkpaper theme applied, including home, archive, tags, and article pages out of the box.
 
-That's it. Run `npm run dev`, open the browser, and you should see your site with the inkpaper theme applied.
+If you want to customize a specific page, create a `.astro` file with the same name under `src/pages/` to override the default route.
 
 ## Source Code
 
