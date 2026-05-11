@@ -4,7 +4,7 @@ White paper, black ink, vermillion accents.
 
 inkpaper is a VitePress blog theme designed for personal journals and blogs. Quiet, readable, textured — opening a page feels like unrolling a sheet of rice paper.
 
-[中文](./README.md)
+[中文](./README.md) | [Live Demo](https://inkpaper.vercel.app/)
 
 ## Quick Start
 

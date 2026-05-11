@@ -4,7 +4,7 @@
 
 inkpaper 是一个 VitePress 博客主题，为个人日志和博客设计。视觉上追求安静、可读、有质感——打开页面就像摊开一张宣纸。
 
-[English](./README.en.md)
+[English](./README.en.md) | [在线演示](https://inkpaper.vercel.app/)
 
 ## 快速开始
 
