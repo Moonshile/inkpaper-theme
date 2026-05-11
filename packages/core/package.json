@@ -1,0 +1,19 @@
+{
+  "name": "@inkpaper/core",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.css",
+  "exports": {
+    ".": "./src/index.css",
+    "./tokens": "./src/tokens.css",
+    "./texture": "./src/texture.css",
+    "./typography": "./src/typography.css",
+    "./components": "./src/components.css"
+  },
+  "files": [
+    "src"
+  ],
+  "description": "Ink & Paper design tokens and styles — the shared core of inkpaper themes",
+  "author": "Moonshile",
+  "license": "MIT"
+}

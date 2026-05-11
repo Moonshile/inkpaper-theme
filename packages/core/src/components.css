@@ -1,0 +1,144 @@
+.article-aside-content {
+  margin-top: 1.5rem;
+}
+
+.aside-section {
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 4px;
+  background: var(--paper-warm);
+  border: 1px solid var(--border-faint);
+}
+
+.aside-section .aside-title {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-faint);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.aside-stats {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.aside-stats .stat-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.aside-stats .stat-label {
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.03em;
+}
+
+.aside-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0;
+}
+
+.aside-tag {
+  color: var(--ink-faint);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  margin-right: 0.8rem;
+  text-decoration: none;
+  background-image: linear-gradient(var(--vermillion), var(--vermillion));
+  background-size: 0% 1px;
+  background-position: left bottom;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s var(--ease-out), color 0.2s var(--ease-out);
+}
+
+.aside-tag:hover {
+  color: var(--vermillion);
+  background-size: 100% 1px;
+}
+
+.related-list {
+  list-style: none;
+  padding: 0;
+}
+
+.related-list li {
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.related-list li:last-child {
+  border-bottom: none;
+}
+
+.related-list a {
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  text-decoration: none;
+  transition: color 0.2s var(--ease-out);
+}
+
+.related-list a:hover {
+  color: var(--vermillion);
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.post-list li:first-child {
+  padding-top: 0;
+}
+
+.post-list li:last-child {
+  border-bottom: none;
+}
+
+.post-list-title {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--ink);
+  display: inline;
+  background-image: linear-gradient(var(--vermillion), var(--vermillion));
+  background-size: 0% 1px;
+  background-position: left bottom;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s var(--ease-out), color 0.2s var(--ease-out);
+  padding-bottom: 1px;
+  text-decoration: none;
+}
+
+.post-list-title:hover {
+  color: var(--vermillion);
+  background-size: 100% 1px;
+}
+
+.post-meta {
+  color: var(--ink-faint);
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin-top: 0.2rem;
+  letter-spacing: 0.02em;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

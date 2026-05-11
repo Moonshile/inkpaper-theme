@@ -1,0 +1,193 @@
+@import '@inkpaper/core';
+
+:root {
+  --vp-c-brand-1: var(--vermillion);
+  --vp-c-brand-2: var(--vermillion-soft);
+  --vp-c-brand-3: #a03d2f;
+  --vp-c-brand-soft: var(--vermillion-faint);
+
+  --vp-c-bg: var(--paper);
+  --vp-c-bg-alt: var(--paper-warm);
+  --vp-c-bg-soft: var(--paper-warm);
+  --vp-c-bg-elv: var(--paper);
+
+  --vp-c-text-1: var(--ink);
+  --vp-c-text-2: var(--ink-light);
+  --vp-c-text-3: var(--ink-faint);
+
+  --vp-c-divider: var(--border-faint);
+  --vp-c-border: var(--border);
+
+  --vp-font-family-base: var(--inkpaper-font-base);
+  --vp-font-family-mono: var(--inkpaper-font-mono);
+
+  --vp-nav-height: 56px;
+
+  --vp-sidebar-bg-color: var(--paper);
+}
+
+.dark {
+  --vp-c-bg: var(--paper);
+  --vp-c-bg-alt: var(--paper-warm);
+  --vp-c-bg-soft: var(--paper-warm);
+  --vp-c-bg-elv: var(--paper-warm);
+
+  --vp-c-text-1: var(--ink);
+  --vp-c-text-2: var(--ink-light);
+  --vp-c-text-3: var(--ink-faint);
+
+  --vp-c-divider: var(--border-faint);
+  --vp-c-border: var(--border);
+
+  --vp-sidebar-bg-color: var(--paper);
+}
+
+/* Nav */
+.VPNav .VPNavBarTitle .title {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.VPNav a:hover {
+  color: var(--vermillion) !important;
+}
+
+/* Sidebar tree */
+.VPSidebarItem.level-0 {
+  padding-bottom: 4px;
+}
+
+.VPSidebarItem.collapsed.level-0 {
+  padding-bottom: 4px;
+}
+
+.VPSidebarItem .item {
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+}
+
+.VPSidebarItem .item .text {
+  font-size: 13px;
+  line-height: 22px;
+}
+
+.VPSidebarItem .caret {
+  order: -1;
+  margin-right: 0;
+  margin-left: -6px;
+  width: 20px;
+  height: 20px;
+}
+
+.VPSidebarItem .caret-icon {
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+.VPSidebarItem.is-link:not(.collapsible) > .item .text::before {
+  content: '';
+  display: inline-block;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+  vertical-align: -2px;
+  opacity: 0.45;
+  background: var(--ink-faint);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 1h6.293L13 4.207V14.5l-.5.5h-9l-.5-.5v-13l.5-.5zM4 2v12h8V5H9.5L9 4.5V2H4zm6 0v2h2L10 2zM5 8h5v1H5V8zm0 2h5v1H5v-1zm0-4h3v1H5V6z' fill='currentColor'/%3E%3C/svg%3E") center / 14px no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 1h6.293L13 4.207V14.5l-.5.5h-9l-.5-.5v-13l.5-.5zM4 2v12h8V5H9.5L9 4.5V2H4zm6 0v2h2L10 2zM5 8h5v1H5V8zm0 2h5v1H5v-1zm0-4h3v1H5V6z' fill='currentColor'/%3E%3C/svg%3E") center / 14px no-repeat;
+}
+
+.VPSidebarItem .items {
+  padding-left: 0 !important;
+  border-left: none !important;
+}
+
+.VPSidebarItem.collapsible > .items {
+  padding-left: 16px !important;
+  margin-left: 8px;
+  border-left: 1px solid var(--border) !important;
+}
+
+.VPSidebar a.active {
+  color: var(--vermillion) !important;
+}
+
+/* Content area */
+.vp-doc a {
+  color: var(--vermillion);
+  text-decoration: underline;
+  text-decoration-color: var(--vermillion-soft);
+  text-underline-offset: 2px;
+}
+
+.vp-doc a:hover {
+  text-decoration-color: var(--vermillion);
+}
+
+.vp-doc blockquote {
+  border-left-color: var(--vermillion-soft);
+  background: var(--vermillion-faint);
+}
+
+.vp-doc :not(pre) > code {
+  background: var(--paper-deep);
+  color: var(--vermillion);
+}
+
+/* Post list: re-scope under .vp-doc to override .vp-doc a */
+.vp-doc .post-list {
+  list-style: none;
+  padding: 0;
+}
+
+.vp-doc .post-list li {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.vp-doc .post-list li:first-child {
+  padding-top: 0;
+}
+
+.vp-doc .post-list li:last-child {
+  border-bottom: none;
+}
+
+.vp-doc .post-list-title {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--ink);
+  display: inline;
+  background-image: linear-gradient(var(--vermillion), var(--vermillion));
+  background-size: 0% 1px;
+  background-position: left bottom;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s var(--ease-out), color 0.2s var(--ease-out);
+  padding-bottom: 1px;
+  text-decoration: none;
+}
+
+.vp-doc .post-list-title:hover {
+  color: var(--vermillion);
+  background-size: 100% 1px;
+  text-decoration: none;
+}
+
+.vp-doc .post-meta {
+  color: var(--ink-faint);
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin-top: 0.2rem;
+  letter-spacing: 0.02em;
+}
+
+/* Hide prev/next navigation */
+.VPDocFooter .prev-next {
+  display: none;
+}
+
+.pager {
+  display: none !important;
+}

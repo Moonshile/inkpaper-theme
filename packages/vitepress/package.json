@@ -1,0 +1,32 @@
+{
+  "name": "@inkpaper/vitepress",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./config": "./src/config.mjs",
+    "./types": "./src/types.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@inkpaper/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "vitepress": ">=1.0.0",
+    "vue": ">=3.3.0"
+  },
+  "description": "An ink-and-paper style VitePress theme for personal journals and blogs",
+  "author": "Moonshile",
+  "keywords": [
+    "vitepress",
+    "vitepress-theme",
+    "blog",
+    "journal",
+    "ink",
+    "paper"
+  ],
+  "license": "MIT"
+}
