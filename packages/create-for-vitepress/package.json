@@ -1,0 +1,21 @@
+{
+  "name": "@inkpaper/create-for-vitepress",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "create-for-vitepress": "index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "template"
+  ],
+  "description": "Scaffold a VitePress blog with the inkpaper theme",
+  "author": "Moonshile",
+  "keywords": [
+    "inkpaper",
+    "vitepress",
+    "scaffold",
+    "create"
+  ],
+  "license": "MIT"
+}

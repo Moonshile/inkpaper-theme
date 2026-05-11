@@ -14,10 +14,7 @@ export const relatedKey: InjectionKey<Ref<Record<string, { link: string; title: 
 
 export function usePosts(): Post[] {
   const posts = inject(postsKey)
-  if (!posts) {
-    throw new Error('[inkpaper] Posts data not provided. Did you call themeEnhance?')
-  }
-  return posts.value
+  return posts?.value ?? []
 }
 
 export function useRelated(): Record<string, { link: string; title: string }[]> {

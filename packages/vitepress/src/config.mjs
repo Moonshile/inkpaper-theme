@@ -157,3 +157,4 @@ export function generateSidebar(postsDir, options) {
 
   return sidebar
 }
+

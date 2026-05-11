@@ -29,7 +29,12 @@ export function themeEnhance(config: ThemeEnhanceConfig) {
 
 const theme: Theme = {
   extends: DefaultTheme,
-  Layout
+  Layout,
+  enhanceApp(ctx) {
+    DefaultTheme.enhanceApp?.(ctx)
+    ctx.app.provide(postsKey, ref([] as Post[]))
+    ctx.app.provide(relatedKey, ref({}))
+  }
 }
 
 export default theme

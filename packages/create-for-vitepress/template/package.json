@@ -1,6 +1,5 @@
 {
   "private": true,
-  "name": "inkpaper-theme",
   "type": "module",
   "scripts": {
     "dev": "vitepress dev docs",
@@ -8,7 +7,7 @@
     "preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "@inkpaper/vitepress": "workspace:*",
+    "@inkpaper/vitepress": "^0.1.0",
     "vitepress": "^1.6.4"
   }
 }
