@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { withBase } from 'vitepress'
+import { withBase, useData } from 'vitepress'
 import { usePosts } from '../composables/usePosts'
+
+const { site } = useData()
 
 const posts = usePosts()
 
@@ -21,8 +23,8 @@ const lastUpdate = computed(() => posts[0]?.date || '-')
 <template>
   <div class="home-layout">
     <header class="home-header">
-      <h1 class="home-title">Journal</h1>
-      <p class="home-motto">记录思考与生活</p>
+      <h1 class="home-title">{{ site.title }}</h1>
+      <p class="home-motto">{{ site.description }}</p>
     </header>
 
     <section class="stats-row">
