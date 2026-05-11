@@ -1,0 +1,14 @@
+---
+import BaseLayout from '@inkpaper/astro/components/BaseLayout.astro'
+import ArchivePage from '@inkpaper/astro/components/ArchivePage.astro'
+import { getSortedPosts } from '@inkpaper/astro/utils/posts.ts'
+import { getSidebarItems } from '@inkpaper/astro/utils/sidebar.ts'
+import config from 'virtual:inkpaper-config'
+
+const posts = await getSortedPosts(config.postsBase)
+const sidebarItems = await getSidebarItems('archive', config.sidebar, config.postsBase)
+---
+
+<BaseLayout title={config.title} description={config.description} pageTitle="Archive" nav={config.nav} sidebarItems={sidebarItems} currentPath={Astro.url.pathname}>
+  <ArchivePage posts={posts} />
+</BaseLayout>

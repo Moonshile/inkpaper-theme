@@ -1,0 +1,28 @@
+---
+import type { Post } from '../types.ts'
+
+interface Props {
+  posts: Post[]
+  animateDelay?: boolean
+}
+
+const { posts, animateDelay = false } = Astro.props
+---
+
+<ul class="post-list">
+  {posts.map((post, i) => (
+    <li style={animateDelay ? `animation-delay: ${i * 0.05}s` : undefined}>
+      <a href={post.url} class="post-list-title">{post.title}</a>
+      <div class="post-meta">
+        {post.date}
+        {post.tags.length > 0 && <span> &middot; {post.tags.join(', ')}</span>}
+      </div>
+    </li>
+  ))}
+</ul>
+
+<style is:global>
+  .post-list li {
+    animation: fadeInUp 0.45s var(--ease-out) both;
+  }
+</style>

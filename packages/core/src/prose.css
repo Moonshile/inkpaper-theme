@@ -1,0 +1,142 @@
+.inkpaper-prose {
+  font-size: 16px;
+  line-height: 28px;
+  color: var(--ink);
+}
+
+.inkpaper-prose h1,
+.inkpaper-prose h2,
+.inkpaper-prose h3,
+.inkpaper-prose h4,
+.inkpaper-prose h5,
+.inkpaper-prose h6 {
+  position: relative;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.inkpaper-prose h1 {
+  font-size: 28px;
+  line-height: 40px;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+}
+
+.inkpaper-prose h2 {
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+  margin: 48px 0 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-faint);
+}
+
+.inkpaper-prose h3 {
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.01em;
+  margin: 32px 0 0;
+}
+
+.inkpaper-prose h4 {
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.01em;
+  margin: 24px 0 0;
+}
+
+.inkpaper-prose p {
+  margin: 16px 0;
+}
+
+.inkpaper-prose a {
+  font-weight: 500;
+  color: var(--vermillion);
+  text-decoration: underline;
+  text-decoration-color: var(--vermillion-soft);
+  text-underline-offset: 2px;
+  transition: color 0.25s, opacity 0.25s;
+}
+
+.inkpaper-prose a:hover {
+  text-decoration-color: var(--vermillion);
+}
+
+.inkpaper-prose blockquote {
+  margin: 16px 0;
+  border-left: 2px solid var(--vermillion-soft);
+  background: var(--vermillion-faint);
+  padding-left: 16px;
+}
+
+.inkpaper-prose :not(pre) > code {
+  background: var(--paper-deep);
+  color: var(--vermillion);
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 0.875em;
+}
+
+.inkpaper-prose pre {
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 16px 0;
+  padding: 20px 24px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.inkpaper-prose ul,
+.inkpaper-prose ol {
+  padding-left: 1.25rem;
+  margin: 16px 0;
+}
+
+.inkpaper-prose li + li {
+  margin-top: 8px;
+}
+
+.inkpaper-prose hr {
+  border: none;
+  border-top: 1px solid var(--border-faint);
+  margin: 2rem 0;
+}
+
+.inkpaper-prose img {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.inkpaper-prose table {
+  display: block;
+  border-collapse: collapse;
+  margin: 20px 0;
+  overflow-x: auto;
+}
+
+.inkpaper-prose tr {
+  background-color: var(--paper);
+  border-top: 1px solid var(--border-faint);
+}
+
+.inkpaper-prose tr:nth-child(2n) {
+  background-color: var(--paper-warm);
+}
+
+.inkpaper-prose th,
+.inkpaper-prose td {
+  border: 1px solid var(--border-faint);
+  padding: 8px 16px;
+}
+
+.inkpaper-prose th {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-light);
+  background-color: var(--paper-warm);
+}
+
+.inkpaper-prose td {
+  font-size: 14px;
+}

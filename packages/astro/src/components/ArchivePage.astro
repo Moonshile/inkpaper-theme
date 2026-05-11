@@ -1,0 +1,54 @@
+---
+import type { Post } from '../types.ts'
+import PostList from './PostList.astro'
+
+interface Props {
+  posts: Post[]
+}
+
+const { posts } = Astro.props
+
+const groupedMap: Record<string, Post[]> = {}
+posts.forEach(p => {
+  const year = p.date.slice(0, 4)
+  if (!groupedMap[year]) groupedMap[year] = []
+  groupedMap[year].push(p)
+})
+const grouped = Object.entries(groupedMap).sort((a, b) => b[0].localeCompare(a[0]))
+---
+
+<div class="archive-page">
+  {grouped.map(([year, yearPosts]) => (
+    <div class="archive-year">
+      <h2 class="section-heading">{year} <span class="year-count">({yearPosts.length})</span></h2>
+      <PostList posts={yearPosts} />
+    </div>
+  ))}
+</div>
+
+<style>
+  .archive-page {
+    padding: 0;
+  }
+
+  .archive-year {
+    margin-bottom: 2.25rem;
+  }
+
+  .section-heading {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.85rem;
+    border: none;
+    padding: 0;
+  }
+
+  .year-count {
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--ink-ghost);
+  }
+</style>

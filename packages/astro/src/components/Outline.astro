@@ -1,0 +1,74 @@
+---
+import type { OutlineItem } from '../utils/outline.ts'
+
+interface Props {
+  items: OutlineItem[]
+  label?: string
+}
+
+const { items, label = 'On this page' } = Astro.props
+---
+
+<nav class="VPDocAsideOutline">
+  <div class="outline-content">
+    <div class="outline-title">{label}</div>
+    <ul class="outline-list">
+      {items.map(item => (
+        <li class:list={[`level-${item.level}`]}>
+          <a href={`#${item.id}`} class="outline-link">{item.text}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .VPDocAsideOutline {
+    margin-bottom: 1.25rem;
+  }
+
+  .outline-content {
+    position: relative;
+    border-left: 1px solid var(--border);
+    padding-left: 16px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .outline-title {
+    line-height: 32px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink-light);
+  }
+
+  .outline-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .outline-list li {
+    line-height: 28px;
+  }
+
+  .outline-list li.level-3 {
+    padding-left: 12px;
+  }
+
+  .outline-link {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    text-decoration: none;
+    transition: color 0.25s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .outline-link:hover {
+    color: var(--ink);
+  }
+</style>

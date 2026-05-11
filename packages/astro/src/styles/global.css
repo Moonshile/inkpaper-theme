@@ -1,0 +1,57 @@
+@import '@inkpaper/core';
+
+:root {
+  --ink-sidebar-width: 272px;
+  --ink-aside-width: 256px;
+  --ink-layout-max-width: 1440px;
+  --ink-nav-height: 56px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--inkpaper-font-base);
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+code {
+  font-family: var(--inkpaper-font-mono);
+}
+
+/* Shiki dual-theme: show light in light mode, dark in dark mode */
+html:not(.dark) .astro-code .dark {
+  display: none !important;
+}
+
+html.dark .astro-code .light {
+  display: none !important;
+}
+
+html.dark .astro-code,
+html.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+.astro-code {
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}

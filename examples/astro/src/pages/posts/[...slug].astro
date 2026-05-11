@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content'
+import ArticleLayout from '@inkpaper/astro/components/ArticleLayout.astro'
+import { getSortedPosts } from '@inkpaper/astro/utils/posts.ts'
+import { getSidebarItems } from '@inkpaper/astro/utils/sidebar.ts'
+import config from 'virtual:inkpaper-config'
+
+export async function getStaticPaths() {
+  const entries = await getCollection('posts')
+  return entries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }))
+}
+
+const { entry } = Astro.props
+const { Content } = await entry.render()
+const allPosts = await getSortedPosts(config.postsBase)
+const sidebarItems = await getSidebarItems('article', config.sidebar, config.postsBase)
+---
+
+<ArticleLayout
+  title={config.title}
+  description={config.description}
+  nav={config.nav}
+  frontmatter={entry.data}
+  body={entry.body}
+  currentUrl={`${config.postsBase}/${entry.slug}`}
+  allPosts={allPosts}
+  relatedMap={config.related}
+  sidebarItems={sidebarItems}
+>
+  <Content />
+</ArticleLayout>

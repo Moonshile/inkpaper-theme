@@ -1,0 +1,55 @@
+---
+import type { Post } from '../types.ts'
+import { findRelated } from '../utils/related.ts'
+
+interface Props {
+  wordCount: number
+  tags: string[]
+  currentUrl: string
+  allPosts: Post[]
+  relatedMap?: Record<string, { link: string; title: string }[]>
+}
+
+const { wordCount, tags, currentUrl, allPosts, relatedMap } = Astro.props
+const readingTime = Math.max(1, Math.ceil(wordCount / 400))
+const related = findRelated(currentUrl, tags, allPosts, relatedMap)
+---
+
+<div class="article-aside-content">
+  <div class="aside-section">
+    <div class="aside-title">统计</div>
+    <div class="aside-stats">
+      <div>
+        <div class="stat-value">{wordCount}</div>
+        <div class="stat-label">字数</div>
+      </div>
+      <div>
+        <div class="stat-value">{readingTime} min</div>
+        <div class="stat-label">阅读</div>
+      </div>
+    </div>
+  </div>
+
+  {tags.length > 0 && (
+    <div class="aside-section">
+      <div class="aside-title">标签</div>
+      <div class="aside-tags">
+        {tags.map(tag => (
+          <a href={`/tags?tag=${encodeURIComponent(tag)}`} class="aside-tag">{tag}</a>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {related.length > 0 && (
+    <div class="aside-section">
+      <div class="aside-title">相关文章</div>
+      <ul class="related-list">
+        {related.map(item => (
+          <li><a href={item.link}>{item.title}</a></li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>
+

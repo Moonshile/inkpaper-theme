@@ -1,0 +1,76 @@
+---
+import BaseLayout from './BaseLayout.astro'
+import ArticleAside from './ArticleAside.astro'
+import Outline from './Outline.astro'
+import type { Post, SidebarItem } from '../types.ts'
+import { extractOutline } from '../utils/outline.ts'
+
+interface Props {
+  title: string
+  description?: string
+  nav?: { text: string; link: string }[]
+  frontmatter: { title?: string; date?: string; tags?: string[]; order?: number }
+  body: string
+  currentUrl: string
+  allPosts: Post[]
+  relatedMap?: Record<string, { link: string; title: string }[]>
+  sidebarItems?: SidebarItem[]
+}
+
+const { title, description, nav, frontmatter, body, currentUrl, allPosts, relatedMap, sidebarItems = [] } = Astro.props
+const tags = frontmatter.tags || []
+const wordCount = body
+  .replace(/^---[\s\S]*?---/, '')
+  .replace(/[#*`\[\]()>_~|{}\-=]/g, '')
+  .replace(/\s+/g, '')
+  .length
+const outline = extractOutline(body)
+---
+
+<BaseLayout title={title} description={description} pageTitle={frontmatter.title} nav={nav} sidebarItems={sidebarItems} currentPath={currentUrl}>
+  <article>
+    <header class="article-header">
+      {frontmatter.title && <h1 class="article-title">{frontmatter.title}</h1>}
+      <div class="article-meta">
+        {frontmatter.date && <time>{new Date(frontmatter.date).toISOString().slice(0, 10)}</time>}
+        {tags.length > 0 && <span> &middot; {tags.join(', ')}</span>}
+      </div>
+    </header>
+    <div class="inkpaper-prose">
+      <slot />
+    </div>
+  </article>
+  <Fragment slot="aside">
+    {outline.length > 0 && <Outline items={outline} />}
+    <ArticleAside
+      wordCount={wordCount}
+      tags={tags}
+      currentUrl={currentUrl}
+      allPosts={allPosts}
+      relatedMap={relatedMap}
+    />
+  </Fragment>
+</BaseLayout>
+
+<style>
+  .article-header {
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-faint);
+  }
+
+  .article-title {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 36px;
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+
+  .article-meta {
+    font-size: 14px;
+    color: var(--ink-faint);
+    line-height: 24px;
+  }
+
+</style>

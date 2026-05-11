@@ -1,0 +1,14 @@
+{
+  "name": "inkpaper-astro-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@inkpaper/astro": "workspace:*",
+    "astro": "^4.0.0"
+  }
+}

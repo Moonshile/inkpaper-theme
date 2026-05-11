@@ -1,0 +1,225 @@
+---
+import Nav from './Nav.astro'
+import Sidebar from './Sidebar.astro'
+import type { SidebarItem } from '../types.ts'
+import '../styles/global.css'
+
+interface Props {
+  title?: string
+  description?: string
+  pageTitle?: string
+  nav?: { text: string; link: string }[]
+  sidebarItems?: SidebarItem[]
+  currentPath?: string
+}
+
+const {
+  title = 'inkpaper',
+  description = '',
+  pageTitle,
+  nav = [
+    { text: 'Home', link: '/' },
+    { text: 'Archive', link: '/archive' },
+    { text: 'Tags', link: '/tags' },
+  ],
+  sidebarItems = [],
+  currentPath = '',
+} = Astro.props
+
+const displayTitle = pageTitle ? `${pageTitle} - ${title}` : title
+const hasSidebar = sidebarItems.length > 0
+const hasAside = Astro.slots.has('aside')
+---
+
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={description} />
+  <title>{displayTitle}</title>
+  <script is:inline>
+    ;(function () {
+      var saved = localStorage.getItem('theme')
+      if (saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      }
+    })()
+  </script>
+</head>
+<body>
+  <Nav title={title} nav={nav} />
+  <div class="VPDoc">
+    <div class:list={['doc-container', { 'has-sidebar': hasSidebar, 'has-aside': hasAside }]}>
+      {hasSidebar && (
+        <div class="doc-sidebar">
+          <div class="doc-sidebar-inner">
+            <Sidebar items={sidebarItems} currentPath={currentPath} />
+          </div>
+        </div>
+      )}
+      {hasAside && (
+        <div class="doc-aside">
+          <div class="doc-aside-curtain" />
+          <div class="doc-aside-container">
+            <div class="doc-aside-inner">
+              <slot name="aside" />
+            </div>
+          </div>
+        </div>
+      )}
+      <div class="doc-content-container">
+        <div class="doc-content">
+          <main>
+            <slot />
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+<style>
+  .VPDoc {
+    padding: 32px 24px 96px;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .VPDoc {
+      padding: 48px 32px 128px;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .VPDoc {
+      padding: 48px 32px 0;
+    }
+  }
+
+  .doc-container {
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  @media (min-width: 960px) {
+    .doc-container:not(.has-sidebar) {
+      display: flex;
+      justify-content: center;
+      max-width: 992px;
+    }
+    .doc-container:not(.has-sidebar) .doc-content-container {
+      max-width: 752px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .doc-container {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .doc-container:not(.has-sidebar) .doc-content-container {
+      max-width: 784px;
+    }
+    .doc-container:not(.has-sidebar) {
+      max-width: 1104px;
+    }
+  }
+
+  .doc-sidebar {
+    width: var(--ink-sidebar-width);
+    flex-shrink: 0;
+  }
+
+  .doc-sidebar-inner {
+    position: sticky;
+    top: calc(var(--ink-nav-height) + 32px);
+    max-height: calc(100vh - var(--ink-nav-height) - 64px);
+    overflow-y: auto;
+    padding-right: 32px;
+  }
+
+  .doc-content-container {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  @media (min-width: 960px) {
+    .doc-content-container {
+      padding: 0 32px 128px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .doc-content-container {
+      order: 1;
+      margin: 0;
+      min-width: 640px;
+    }
+  }
+
+  .doc-content {
+    margin: 0 auto;
+  }
+
+  .doc-container.has-aside .doc-content {
+    max-width: 688px;
+  }
+
+  .doc-aside {
+    position: relative;
+    display: none;
+    order: 2;
+    flex-grow: 1;
+    padding-left: 32px;
+    width: 100%;
+    max-width: 256px;
+  }
+
+  @media (min-width: 1280px) {
+    .doc-aside {
+      display: block;
+    }
+  }
+
+  .doc-aside-container {
+    position: fixed;
+    top: 0;
+    padding-top: calc(var(--ink-nav-height) + 48px);
+    width: 224px;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .doc-aside-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .doc-aside-curtain {
+    position: fixed;
+    bottom: 0;
+    z-index: 10;
+    width: 224px;
+    height: 32px;
+    background: linear-gradient(transparent, var(--paper) 70%);
+  }
+
+  .doc-aside-inner {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - var(--ink-nav-height) - 48px);
+    padding-bottom: 32px;
+  }
+
+  @media (max-width: 960px) {
+    .doc-sidebar {
+      display: none;
+    }
+  }
+</style>

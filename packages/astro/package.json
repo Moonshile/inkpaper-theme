@@ -1,0 +1,32 @@
+{
+  "name": "@inkpaper/astro",
+  "version": "0.1.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./content": "./src/content.ts",
+    "./utils/*": "./src/utils/*",
+    "./components/*": "./src/components/*"
+  },
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@inkpaper/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "astro": ">=4.0.0"
+  },
+  "description": "An ink-and-paper style Astro theme for personal journals and blogs",
+  "author": "Moonshile",
+  "keywords": [
+    "astro",
+    "astro-theme",
+    "blog",
+    "journal",
+    "ink",
+    "paper"
+  ],
+  "license": "MIT"
+}

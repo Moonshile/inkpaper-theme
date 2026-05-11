@@ -1,0 +1,114 @@
+---
+import type { Post } from '../types.ts'
+
+interface Props {
+  posts: Post[]
+}
+
+const { posts } = Astro.props
+
+const tagMap: Record<string, number> = {}
+posts.forEach(p => p.tags.forEach(t => { tagMap[t] = (tagMap[t] || 0) + 1 }))
+const allTags = Object.entries(tagMap).sort((a, b) => b[1] - a[1])
+---
+
+<div class="tags-page">
+  <div class="tag-cloud">
+    {allTags.map(([tag, count]) => (
+      <button class="tag" data-tag={tag}>
+        {tag}<sup>{count}</sup>
+      </button>
+    ))}
+  </div>
+
+  <ul class="post-list" id="tags-post-list">
+    {posts.map(post => (
+      <li data-tags={post.tags.join(',')}>
+        <a href={post.url} class="post-list-title">{post.title}</a>
+        <div class="post-meta">{post.date} &middot; {post.tags.join(', ')}</div>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<script is:inline>
+  ;(function () {
+    var buttons = document.querySelectorAll('.tags-page .tag')
+    var items = document.querySelectorAll('#tags-post-list li')
+    var active = null
+
+    var params = new URLSearchParams(window.location.search)
+    var initial = params.get('tag')
+    if (initial) activate(initial)
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var tag = btn.getAttribute('data-tag')
+        activate(active === tag ? null : tag)
+      })
+    })
+
+    function activate(tag) {
+      active = tag
+      buttons.forEach(function (btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-tag') === tag)
+      })
+      items.forEach(function (li) {
+        if (!tag) { li.style.display = ''; return }
+        var tags = (li.getAttribute('data-tags') || '').split(',')
+        li.style.display = tags.indexOf(tag) >= 0 ? '' : 'none'
+      })
+    }
+  })()
+</script>
+
+<style>
+  .tags-page {
+    padding: 0;
+  }
+
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 0;
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-faint);
+  }
+
+  .tag {
+    display: inline-block;
+    color: var(--ink-light);
+    font-size: 0.92rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    margin-right: 1.25rem;
+    padding: 0.25rem 0;
+    text-decoration: none;
+    border: none;
+    background: none;
+    background-image: linear-gradient(var(--vermillion), var(--vermillion));
+    background-size: 0% 1px;
+    background-position: left bottom;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-size 0.35s var(--ease-out), color 0.2s var(--ease-out);
+  }
+
+  .tag:hover {
+    color: var(--vermillion);
+    background-size: 100% 1px;
+  }
+
+  .tag.active {
+    color: var(--vermillion);
+    background-size: 100% 1px;
+  }
+
+  .tag sup {
+    font-size: 0.65rem;
+    color: var(--ink-faint);
+    margin-left: 0.15rem;
+  }
+</style>
