@@ -9,8 +9,8 @@ export interface Post {
   order: number
 }
 
-export const postsKey: InjectionKey<Ref<Post[]>> = Symbol('inkpaper-posts')
-export const relatedKey: InjectionKey<Ref<Record<string, { link: string; title: string }[]>>> = Symbol('inkpaper-related')
+export const postsKey: InjectionKey<Ref<Post[]>> = Symbol.for('inkpaper-posts')
+export const relatedKey: InjectionKey<Ref<Record<string, { link: string; title: string }[]>>> = Symbol.for('inkpaper-related')
 
 export function usePosts(): Post[] {
   const posts = inject(postsKey)
