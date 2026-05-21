@@ -1,6 +1,6 @@
 {
   "name": "@inkpaper/create-for-vitepress",
-  "version": "0.1.1",
+  "version": "0.3.0",
   "type": "module",
   "bin": {
     "create-for-vitepress": "index.mjs"
