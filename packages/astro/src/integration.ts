@@ -28,7 +28,11 @@ export default function inkpaper(config: InkpaperConfig = {}): AstroIntegration 
         })
         injectRoute({
           pattern: '/archive',
-          entrypoint: '@inkpaper/astro/pages/archive.astro',
+          entrypoint: '@inkpaper/astro/pages/archive/index.astro',
+        })
+        injectRoute({
+          pattern: '/archive/[...period]',
+          entrypoint: '@inkpaper/astro/pages/archive/[...period].astro',
         })
         injectRoute({
           pattern: '/tags',
@@ -37,6 +41,10 @@ export default function inkpaper(config: InkpaperConfig = {}): AstroIntegration 
         injectRoute({
           pattern: '/posts/[...slug]',
           entrypoint: '@inkpaper/astro/pages/posts/[...slug].astro',
+        })
+        injectRoute({
+          pattern: '/category/[...dir]',
+          entrypoint: '@inkpaper/astro/pages/category/[...dir].astro',
         })
 
         updateConfig({

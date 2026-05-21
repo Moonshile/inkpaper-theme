@@ -31,7 +31,7 @@ function parseFrontmatter(filePath) {
   }
 }
 
-function scanDir(dir, urlPrefix) {
+function scanDir(dir, urlPrefix, categoryPrefix = '') {
   const entries = fs.readdirSync(dir, { withFileTypes: true })
   const items = []
   const groups = []
@@ -39,9 +39,10 @@ function scanDir(dir, urlPrefix) {
   for (const entry of entries) {
     if (entry.name.startsWith('.')) continue
     if (entry.isDirectory()) {
-      const children = scanDir(path.join(dir, entry.name), `${urlPrefix}/${entry.name}`)
+      const childCategory = categoryPrefix ? `${categoryPrefix}/${entry.name}` : entry.name
+      const children = scanDir(path.join(dir, entry.name), `${urlPrefix}/${entry.name}`, childCategory)
       if (children.length) {
-        groups.push({ text: entry.name, collapsed: false, items: children })
+        groups.push({ text: entry.name, link: `/category/${childCategory}`, collapsed: false, items: children })
       }
     } else if (entry.name.endsWith('.md')) {
       const fm = parseFrontmatter(path.join(dir, entry.name))
@@ -104,11 +105,13 @@ function buildDateTree(postsDir) {
     .sort((a, b) => b.localeCompare(a))
     .map(year => ({
       text: year,
+      link: `/archive/${year}`,
       collapsed: false,
       items: Object.keys(yearMap[year])
         .sort((a, b) => b.localeCompare(a))
         .map(month => ({
           text: month,
+          link: `/archive/${month}`,
           collapsed: false,
           items: yearMap[year][month]
         }))
@@ -153,6 +156,10 @@ export function generateSidebar(postsDir, options) {
     } else if (config.tree) {
       sidebar[prefix] = getTree(config.tree)
     }
+  }
+
+  if (opts.home.show !== false && opts.home.tree) {
+    sidebar['/category/'] = getTree(opts.home.tree)
   }
 
   return sidebar

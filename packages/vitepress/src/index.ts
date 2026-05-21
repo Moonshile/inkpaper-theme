@@ -14,6 +14,8 @@ export { default as HomeLayout } from './components/HomeLayout.vue'
 export { default as ArchivePage } from './components/ArchivePage.vue'
 export { default as TagsPage } from './components/TagsPage.vue'
 export { default as ArticleAside } from './components/ArticleAside.vue'
+export { default as CategoryPage } from './components/CategoryPage.vue'
+export { default as ArchivePeriodPage } from './components/ArchivePeriodPage.vue'
 
 export interface ThemeEnhanceConfig {
   posts: Post[]

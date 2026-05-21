@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro'
+import PostList from '../../components/PostList.astro'
+import { getSortedPosts } from '../../utils/posts.ts'
+import { getSidebarItems } from '../../utils/sidebar.ts'
+import config from 'virtual:inkpaper-config'
+
+export async function getStaticPaths() {
+  const posts = await getSortedPosts(config.postsBase)
+  const dirs = new Set<string>()
+
+  for (const p of posts) {
+    const parts = p.slug.split('/')
+    for (let i = 1; i < parts.length; i++) {
+      dirs.add(parts.slice(0, i).join('/'))
+    }
+  }
+
+  return Array.from(dirs).map(dir => ({ params: { dir } }))
+}
+
+const { dir } = Astro.params
+const posts = await getSortedPosts(config.postsBase)
+
+const directPosts = posts.filter(p => {
+  if (!p.slug.startsWith(dir + '/')) return false
+  const rel = p.slug.slice(dir!.length + 1)
+  return !rel.includes('/')
+})
+
+const childDirs = new Set<string>()
+for (const p of posts) {
+  if (!p.slug.startsWith(dir + '/')) continue
+  const rel = p.slug.slice(dir!.length + 1)
+  if (rel.includes('/')) {
+    childDirs.add(rel.split('/')[0])
+  }
+}
+
+const sidebarItems = await getSidebarItems('home', config.sidebar, config.postsBase)
+const displayName = dir!.split('/').pop()!
+---
+
+<BaseLayout title={config.title} description={config.description} pageTitle={displayName} nav={config.nav} sidebarItems={sidebarItems} currentPath={Astro.url.pathname}>
+  <div class="category-page">
+    <h1 class="category-title">{displayName}</h1>
+    {childDirs.size > 0 && (
+      <ul class="dir-list">
+        {Array.from(childDirs).sort().map(d => (
+          <li>
+            <a href={`/category/${dir}/${d}`} class="dir-link">
+              <span class="dir-icon" />
+              <span>{d}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+    {directPosts.length > 0 && (
+      <PostList posts={directPosts} animateDelay />
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .category-page {
+    padding: 0;
+  }
+
+  .category-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 1.5rem;
+    border: none;
+  }
+
+  .dir-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+  }
+
+  .dir-list li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border-faint);
+  }
+
+  .dir-list li:last-child {
+    border-bottom: none;
+  }
+
+  .dir-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 1.05rem;
+    font-weight: 500;
+    transition: color 0.2s var(--ease-out);
+  }
+
+  .dir-link:hover {
+    color: var(--vermillion);
+  }
+
+  .dir-icon {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    opacity: 0.5;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 2h4.293l1 1H14.5l.5.5v10l-.5.5h-13l-.5-.5v-11l.5-.5zM2 3v10h12V4H6.5l-1-1H2z' fill='currentColor'/%3E%3C/svg%3E") center / 16px no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 2h4.293l1 1H14.5l.5.5v10l-.5.5h-13l-.5-.5v-11l.5-.5zM2 3v10h12V4H6.5l-1-1H2z' fill='currentColor'/%3E%3C/svg%3E") center / 16px no-repeat;
+  }
+</style>
