@@ -43,6 +43,8 @@ const hasAside = Astro.slots.has('aside')
       if (saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark')
       }
+      var sw = localStorage.getItem('ink-sidebar-width')
+      if (sw) document.documentElement.style.setProperty('--ink-sidebar-width', sw + 'px')
     })()
   </script>
 </head>
@@ -55,6 +57,7 @@ const hasAside = Astro.slots.has('aside')
           <div class="doc-sidebar-inner">
             <Sidebar items={sidebarItems} currentPath={currentPath} />
           </div>
+          <div class="doc-sidebar-resize" />
         </div>
       )}
       {hasAside && (
@@ -130,8 +133,26 @@ const hasAside = Astro.slots.has('aside')
   }
 
   .doc-sidebar {
+    position: relative;
     width: var(--ink-sidebar-width);
     flex-shrink: 0;
+  }
+
+  .doc-sidebar-resize {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    cursor: col-resize;
+    background: transparent;
+    transition: background 0.2s;
+    z-index: 10;
+  }
+
+  .doc-sidebar-resize:hover,
+  .doc-sidebar-resize.dragging {
+    background: var(--border);
   }
 
   .doc-sidebar-inner {
@@ -223,3 +244,33 @@ const hasAside = Astro.slots.has('aside')
     }
   }
 </style>
+
+<script>
+  const handle = document.querySelector('.doc-sidebar-resize')
+  if (handle) {
+    let startX: number
+    let startWidth: number
+
+    function onMouseMove(e: MouseEvent) {
+      const width = Math.max(200, Math.min(480, startWidth + e.clientX - startX))
+      document.documentElement.style.setProperty('--ink-sidebar-width', width + 'px')
+    }
+
+    function onMouseUp(e: MouseEvent) {
+      handle!.classList.remove('dragging')
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', onMouseUp)
+      const width = Math.max(200, Math.min(480, startWidth + e.clientX - startX))
+      localStorage.setItem('ink-sidebar-width', String(width))
+    }
+
+    handle.addEventListener('mousedown', (e) => {
+      e.preventDefault()
+      startX = (e as MouseEvent).clientX
+      startWidth = document.querySelector<HTMLElement>('.doc-sidebar')!.offsetWidth
+      handle.classList.add('dragging')
+      document.addEventListener('mousemove', onMouseMove)
+      document.addEventListener('mouseup', onMouseUp)
+    })
+  }
+</script>

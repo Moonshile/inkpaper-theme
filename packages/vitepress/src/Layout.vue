@@ -1,10 +1,48 @@
 <script setup lang="ts">
 import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
+import { onMounted } from 'vue'
 import ArticleAside from './components/ArticleAside.vue'
 
 const { Layout } = DefaultTheme
 const { frontmatter } = useData()
+
+onMounted(() => {
+  const saved = localStorage.getItem('ink-sidebar-width')
+  if (saved) document.documentElement.style.setProperty('--vp-sidebar-width', saved + 'px')
+
+  const sidebar = document.querySelector<HTMLElement>('.VPSidebar')
+  if (!sidebar) return
+
+  const handle = document.createElement('div')
+  handle.className = 'ink-sidebar-resize'
+  sidebar.appendChild(handle)
+
+  let startX: number
+  let startWidth: number
+
+  function onMouseMove(e: MouseEvent) {
+    const width = Math.max(200, Math.min(480, startWidth + e.clientX - startX))
+    document.documentElement.style.setProperty('--vp-sidebar-width', width + 'px')
+  }
+
+  function onMouseUp(e: MouseEvent) {
+    handle.classList.remove('dragging')
+    document.removeEventListener('mousemove', onMouseMove)
+    document.removeEventListener('mouseup', onMouseUp)
+    const width = Math.max(200, Math.min(480, startWidth + e.clientX - startX))
+    localStorage.setItem('ink-sidebar-width', String(width))
+  }
+
+  handle.addEventListener('mousedown', (e) => {
+    e.preventDefault()
+    startX = e.clientX
+    startWidth = sidebar.offsetWidth
+    handle.classList.add('dragging')
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', onMouseUp)
+  })
+})
 </script>
 
 <template>
