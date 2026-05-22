@@ -94,20 +94,18 @@ const displayName = computed(() => category.value.split('/').pop() ?? '')
     </section>
 
     <section v-if="childDirs.length" class="category-section">
-      <h2 class="section-heading">子目录</h2>
       <ul class="dir-list">
         <li v-for="d in childDirs" :key="d">
           <a :href="withBase(`/category/${category}/${d}`)" class="dir-link">
             <span class="dir-icon" />
             <span>{{ d }}</span>
-            <span class="dir-count">{{ childDirCount(d) }} 篇</span>
+            <span class="dir-count">{{ childDirCount(d) }} 篇文章</span>
           </a>
         </li>
       </ul>
     </section>
 
     <section v-if="directPosts.length" class="category-section">
-      <h2 class="section-heading">文章</h2>
       <ul class="post-list">
         <li v-for="(post, i) in directPosts" :key="post.url" :style="{ animationDelay: `${i * 0.05}s` }">
           <a :href="withBase(post.url)" class="post-list-title">{{ post.title }}</a>
@@ -208,7 +206,7 @@ const displayName = computed(() => category.value.split('/').pop() ?? '')
 
 .dir-link {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 0.5rem;
   text-decoration: none;
   color: var(--ink);
@@ -222,7 +220,6 @@ const displayName = computed(() => category.value.split('/').pop() ?? '')
 }
 
 .dir-count {
-  margin-left: auto;
   font-size: 0.8rem;
   color: var(--ink-faint);
 }
@@ -234,6 +231,7 @@ const displayName = computed(() => category.value.split('/').pop() ?? '')
   height: 16px;
   opacity: 0.5;
   background: currentColor;
+  align-self: center;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 2h4.293l1 1H14.5l.5.5v10l-.5.5h-13l-.5-.5v-11l.5-.5zM2 3v10h12V4H6.5l-1-1H2z' fill='currentColor'/%3E%3C/svg%3E") center / 16px no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 2h4.293l1 1H14.5l.5.5v10l-.5.5h-13l-.5-.5v-11l.5-.5zM2 3v10h12V4H6.5l-1-1H2z' fill='currentColor'/%3E%3C/svg%3E") center / 16px no-repeat;
 }
