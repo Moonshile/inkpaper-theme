@@ -29,6 +29,12 @@ async function loadPosts(postsBase: string): Promise<RawPost[]> {
 }
 
 function buildDirectoryTree(posts: RawPost[], postsBase: string, baseDir = ''): SidebarItem[] {
+  const latestPost = posts[0]
+  const latestDir = latestPost?.slug.includes('/') ? latestPost.slug.split('/')[0] : ''
+  const latestSubDir = latestPost?.slug.includes('/')
+    ? latestPost.slug.split('/').slice(0, 2).join('/')
+    : ''
+
   const dirs = new Set<string>()
   const directPosts: RawPost[] = []
 
@@ -65,7 +71,7 @@ function buildDirectoryTree(posts: RawPost[], postsBase: string, baseDir = ''): 
       childItems.push({
         text: name,
         link: `/category/${childDir}`,
-        collapsed: false,
+        collapsed: childDir !== latestSubDir,
         items: posts.filter(p => p.slug.startsWith(childDir + '/') && !p.slug.slice(childDir.length + 1).includes('/')).map(p => ({
           text: `${p.date} ${p.title}`,
           link: `${postsBase}/${p.slug}`,
@@ -83,7 +89,7 @@ function buildDirectoryTree(posts: RawPost[], postsBase: string, baseDir = ''): 
     items.push({
       text: dirName,
       link: `/category/${dir}`,
-      collapsed: false,
+      collapsed: dir !== latestDir,
       items: childItems,
     })
   }
@@ -99,6 +105,10 @@ function buildDirectoryTree(posts: RawPost[], postsBase: string, baseDir = ''): 
 }
 
 function buildDateTree(posts: RawPost[], postsBase: string): SidebarItem[] {
+  const latestPost = posts[0]
+  const latestYear = latestPost?.date.slice(0, 4) || ''
+  const latestMonth = latestPost?.date.slice(0, 7) || ''
+
   const yearMap: Record<string, Record<string, RawPost[]>> = {}
 
   for (const p of posts) {
@@ -114,13 +124,13 @@ function buildDateTree(posts: RawPost[], postsBase: string): SidebarItem[] {
     .map(year => ({
       text: year,
       link: `/archive/${year}`,
-      collapsed: false,
+      collapsed: year !== latestYear,
       items: Object.keys(yearMap[year])
         .sort((a, b) => b.localeCompare(a))
         .map(month => ({
           text: month,
           link: `/archive/${month}`,
-          collapsed: false,
+          collapsed: month !== latestMonth,
           items: yearMap[year][month].map(p => ({
             text: `${p.date} ${p.title}`,
             link: `${postsBase}/${p.slug}`,

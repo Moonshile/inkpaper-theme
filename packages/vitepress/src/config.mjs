@@ -31,7 +31,7 @@ function parseFrontmatter(filePath) {
   }
 }
 
-function scanDir(dir, urlPrefix, categoryPrefix = '') {
+function scanDir(dir, urlPrefix, categoryPrefix = '', expandedCategory = '') {
   const entries = fs.readdirSync(dir, { withFileTypes: true })
   const items = []
   const groups = []
@@ -40,9 +40,10 @@ function scanDir(dir, urlPrefix, categoryPrefix = '') {
     if (entry.name.startsWith('.')) continue
     if (entry.isDirectory()) {
       const childCategory = categoryPrefix ? `${categoryPrefix}/${entry.name}` : entry.name
-      const children = scanDir(path.join(dir, entry.name), `${urlPrefix}/${entry.name}`, childCategory)
+      const children = scanDir(path.join(dir, entry.name), `${urlPrefix}/${entry.name}`, childCategory, expandedCategory)
       if (children.length) {
-        groups.push({ text: entry.name, link: `/category/${childCategory}`, collapsed: false, items: children })
+        const shouldExpand = expandedCategory === childCategory || expandedCategory.startsWith(childCategory + '/')
+        groups.push({ text: entry.name, link: `/category/${childCategory}`, collapsed: !shouldExpand, items: children })
       }
     } else if (entry.name.endsWith('.md')) {
       const fm = parseFrontmatter(path.join(dir, entry.name))
@@ -92,6 +93,9 @@ function buildDateTree(postsDir) {
   const posts = collectPosts(postsDir, '/posts')
   posts.sort((a, b) => b.date.localeCompare(a.date) || a.order - b.order)
 
+  const latestYear = posts[0]?.date.slice(0, 4) || ''
+  const latestMonth = posts[0]?.date.slice(0, 7) || ''
+
   const yearMap = {}
   for (const p of posts) {
     const year = p.date.slice(0, 4)
@@ -106,13 +110,13 @@ function buildDateTree(postsDir) {
     .map(year => ({
       text: year,
       link: `/archive/${year}`,
-      collapsed: false,
+      collapsed: year !== latestYear,
       items: Object.keys(yearMap[year])
         .sort((a, b) => b.localeCompare(a))
         .map(month => ({
           text: month,
           link: `/archive/${month}`,
-          collapsed: false,
+          collapsed: month !== latestMonth,
           items: yearMap[year][month]
         }))
     }))
@@ -137,9 +141,19 @@ export function generateSidebar(postsDir, options) {
   let dirTree = null
   let dateTree = null
 
+  function getLatestCategory() {
+    const posts = collectPosts(postsDir, '/posts')
+    posts.sort((a, b) => b.date.localeCompare(a.date) || a.order - b.order)
+    if (!posts.length) return ''
+    const link = posts[0].link
+    const rel = link.replace(/^\/posts\//, '')
+    const parts = rel.split('/')
+    return parts.length > 1 ? parts.slice(0, -1).join('/') : ''
+  }
+
   function getTree(type) {
     if (type === 'directory') {
-      if (!dirTree) dirTree = scanDir(postsDir, '/posts')
+      if (!dirTree) dirTree = scanDir(postsDir, '/posts', '', getLatestCategory())
       return dirTree
     } else {
       if (!dateTree) dateTree = buildDateTree(postsDir)
