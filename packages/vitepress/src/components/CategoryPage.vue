@@ -29,6 +29,14 @@ const directPosts = computed(() =>
   })
 )
 
+const allPosts = computed(() =>
+  posts.filter(p => {
+    const url = p.url.replace(/\.html$/, '')
+    const rel = url.startsWith('/') ? url.slice(1) : url
+    return rel.startsWith(prefix.value)
+  })
+)
+
 const childDirs = computed(() => {
   const dirs = new Set<string>()
   for (const p of posts) {
@@ -43,29 +51,73 @@ const childDirs = computed(() => {
   return Array.from(dirs).sort()
 })
 
+function childDirCount(dir: string): number {
+  const childPrefix = `${prefix.value}${dir}/`
+  return posts.filter(p => {
+    const url = p.url.replace(/\.html$/, '')
+    const rel = url.startsWith('/') ? url.slice(1) : url
+    return rel.startsWith(childPrefix)
+  }).length
+}
+
+const latestDate = computed(() => {
+  if (!allPosts.value.length) return ''
+  return allPosts.value.reduce((a, b) => (a.date > b.date ? a : b)).date
+})
+
 const displayName = computed(() => category.value.split('/').pop() ?? '')
 </script>
 
 <template>
   <div class="category-page">
     <h1 class="category-title">{{ displayName }}</h1>
-    <ul v-if="childDirs.length" class="dir-list">
-      <li v-for="d in childDirs" :key="d">
-        <a :href="withBase(`/category/${category}/${d}`)" class="dir-link">
-          <span class="dir-icon" />
-          <span>{{ d }}</span>
-        </a>
-      </li>
-    </ul>
-    <ul v-if="directPosts.length" class="post-list">
-      <li v-for="(post, i) in directPosts" :key="post.url" :style="{ animationDelay: `${i * 0.05}s` }">
-        <a :href="withBase(post.url)" class="post-list-title">{{ post.title }}</a>
-        <div class="post-meta">
-          {{ post.date }}
-          <span v-if="post.tags.length"> · {{ post.tags.join(', ') }}</span>
+
+    <section class="stats-row">
+      <div class="stat">
+        <span class="stat-num">{{ allPosts.length }}</span>
+        <span class="stat-label">篇文章</span>
+      </div>
+      <template v-if="childDirs.length">
+        <span class="stat-sep">/</span>
+        <div class="stat">
+          <span class="stat-num">{{ childDirs.length }}</span>
+          <span class="stat-label">个子目录</span>
         </div>
-      </li>
-    </ul>
+      </template>
+      <template v-if="latestDate">
+        <span class="stat-sep">/</span>
+        <div class="stat">
+          <span class="stat-label">最近更新</span>
+          <span class="stat-date">{{ latestDate }}</span>
+        </div>
+      </template>
+    </section>
+
+    <section v-if="childDirs.length" class="category-section">
+      <h2 class="section-heading">子目录</h2>
+      <ul class="dir-list">
+        <li v-for="d in childDirs" :key="d">
+          <a :href="withBase(`/category/${category}/${d}`)" class="dir-link">
+            <span class="dir-icon" />
+            <span>{{ d }}</span>
+            <span class="dir-count">{{ childDirCount(d) }} 篇</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section v-if="directPosts.length" class="category-section">
+      <h2 class="section-heading">文章</h2>
+      <ul class="post-list">
+        <li v-for="(post, i) in directPosts" :key="post.url" :style="{ animationDelay: `${i * 0.05}s` }">
+          <a :href="withBase(post.url)" class="post-list-title">{{ post.title }}</a>
+          <div class="post-meta">
+            {{ post.date }}
+            <span v-if="post.tags.length"> · {{ post.tags.join(', ') }}</span>
+          </div>
+        </li>
+      </ul>
+    </section>
   </div>
 </template>
 
@@ -78,14 +130,71 @@ const displayName = computed(() => category.value.split('/').pop() ?? '')
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--ink);
-  margin: 0 0 1.5rem;
+  margin: 0 0 1rem;
   border: none;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+}
+
+.stats-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-faint);
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.45s var(--ease-out) 0.05s both;
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+
+.stat-num {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.02em;
+}
+
+.stat-date {
+  font-size: 0.85rem;
+  color: var(--ink-light);
+  font-weight: 400;
+}
+
+.stat-sep {
+  color: var(--ink-ghost);
+  font-size: 0.8rem;
+}
+
+.category-section {
+  margin-bottom: 2.25rem;
+  animation: fadeInUp 0.45s var(--ease-out) 0.1s both;
+}
+
+.section-heading {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+  border: none;
+  padding: 0;
 }
 
 .dir-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 1rem;
+  margin: 0;
 }
 
 .dir-list li {
@@ -110,6 +219,12 @@ const displayName = computed(() => category.value.split('/').pop() ?? '')
 
 .dir-link:hover {
   color: var(--vermillion);
+}
+
+.dir-count {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
 }
 
 .dir-icon {

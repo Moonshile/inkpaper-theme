@@ -28,6 +28,8 @@ const directPosts = posts.filter(p => {
   return !rel.includes('/')
 })
 
+const allPosts = posts.filter(p => p.slug.startsWith(dir + '/'))
+
 const childDirs = new Set<string>()
 for (const p of posts) {
   if (!p.slug.startsWith(dir + '/')) continue
@@ -37,6 +39,14 @@ for (const p of posts) {
   }
 }
 
+function childDirCount(d: string): number {
+  return posts.filter(p => p.slug.startsWith(`${dir}/${d}/`)).length
+}
+
+const latestDate = allPosts.length
+  ? allPosts.reduce((a, b) => (a.date > b.date ? a : b)).date
+  : ''
+
 const sidebarItems = await getSidebarItems('home', config.sidebar, config.postsBase)
 const displayName = dir!.split('/').pop()!
 ---
@@ -44,20 +54,54 @@ const displayName = dir!.split('/').pop()!
 <BaseLayout title={config.title} description={config.description} pageTitle={displayName} nav={config.nav} sidebarItems={sidebarItems} currentPath={Astro.url.pathname}>
   <div class="category-page">
     <h1 class="category-title">{displayName}</h1>
+
+    <section class="stats-row">
+      <div class="stat">
+        <span class="stat-num">{allPosts.length}</span>
+        <span class="stat-label">篇文章</span>
+      </div>
+      {childDirs.size > 0 && (
+        <>
+          <span class="stat-sep">/</span>
+          <div class="stat">
+            <span class="stat-num">{childDirs.size}</span>
+            <span class="stat-label">个子目录</span>
+          </div>
+        </>
+      )}
+      {latestDate && (
+        <>
+          <span class="stat-sep">/</span>
+          <div class="stat">
+            <span class="stat-label">最近更新</span>
+            <span class="stat-date">{latestDate}</span>
+          </div>
+        </>
+      )}
+    </section>
+
     {childDirs.size > 0 && (
-      <ul class="dir-list">
-        {Array.from(childDirs).sort().map(d => (
-          <li>
-            <a href={`/category/${dir}/${d}`} class="dir-link">
-              <span class="dir-icon" />
-              <span>{d}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
+      <section class="category-section">
+        <h2 class="section-heading">子目录</h2>
+        <ul class="dir-list">
+          {Array.from(childDirs).sort().map(d => (
+            <li>
+              <a href={`/category/${dir}/${d}`} class="dir-link">
+                <span class="dir-icon" />
+                <span>{d}</span>
+                <span class="dir-count">{childDirCount(d)} 篇</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
     )}
+
     {directPosts.length > 0 && (
-      <PostList posts={directPosts} animateDelay />
+      <section class="category-section">
+        <h2 class="section-heading">文章</h2>
+        <PostList posts={directPosts} animateDelay />
+      </section>
     )}
   </div>
 </BaseLayout>
@@ -71,14 +115,71 @@ const displayName = dir!.split('/').pop()!
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--ink);
-    margin: 0 0 1.5rem;
+    margin: 0 0 1rem;
     border: none;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+  }
+
+  .stats-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-faint);
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.45s var(--ease-out) 0.05s both;
+  }
+
+  .stat {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+  }
+
+  .stat-num {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.02em;
+  }
+
+  .stat-date {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    font-weight: 400;
+  }
+
+  .stat-sep {
+    color: var(--ink-ghost);
+    font-size: 0.8rem;
+  }
+
+  .category-section {
+    margin-bottom: 2.25rem;
+    animation: fadeInUp 0.45s var(--ease-out) 0.1s both;
+  }
+
+  .section-heading {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.85rem;
+    border: none;
+    padding: 0;
   }
 
   .dir-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 1rem;
+    margin: 0;
   }
 
   .dir-list li {
@@ -103,6 +204,12 @@ const displayName = dir!.split('/').pop()!
 
   .dir-link:hover {
     color: var(--vermillion);
+  }
+
+  .dir-count {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
   }
 
   .dir-icon {
