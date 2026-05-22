@@ -6,17 +6,19 @@ interface Props {
   posts: Post[]
   title: string
   description?: string
+  maxTags?: number
+  maxRecentPosts?: number
 }
 
-const { posts, title, description = '' } = Astro.props
+const { posts, title, description = '', maxTags = 10, maxRecentPosts = 10 } = Astro.props
 
 const totalPosts = posts.length
 
 const tagMap: Record<string, number> = {}
 posts.forEach(p => p.tags.forEach(t => { tagMap[t] = (tagMap[t] || 0) + 1 }))
 const allTags = Object.entries(tagMap).sort((a, b) => b[1] - a[1])
-const hotTags = allTags.slice(0, 10)
-const recentPosts = posts.slice(0, 10)
+const hotTags = allTags.slice(0, maxTags)
+const recentPosts = posts.slice(0, maxRecentPosts)
 const lastUpdate = posts[0]?.date || '-'
 ---
 

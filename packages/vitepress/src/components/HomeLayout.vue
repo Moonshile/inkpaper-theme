@@ -3,6 +3,14 @@ import { computed } from 'vue'
 import { withBase, useData } from 'vitepress'
 import { usePosts } from '../composables/usePosts'
 
+const props = withDefaults(defineProps<{
+  maxTags?: number
+  maxRecentPosts?: number
+}>(), {
+  maxTags: 10,
+  maxRecentPosts: 10,
+})
+
 const { site } = useData()
 
 const posts = usePosts()
@@ -15,8 +23,8 @@ const allTags = computed(() => {
   return Object.entries(map).sort((a, b) => b[1] - a[1])
 })
 
-const hotTags = computed(() => allTags.value.slice(0, 10))
-const recentPosts = computed(() => posts.slice(0, 10))
+const hotTags = computed(() => allTags.value.slice(0, props.maxTags))
+const recentPosts = computed(() => posts.slice(0, props.maxRecentPosts))
 const lastUpdate = computed(() => posts[0]?.date || '-')
 </script>
 
