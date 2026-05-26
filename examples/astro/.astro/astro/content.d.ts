@@ -155,6 +155,20 @@ declare module 'astro:content' {
   collection: "posts";
   data: InferEntrySchema<"posts">
 } & { render(): Render[".md"] };
+"2026-05-26-ink-effect-background-animation.md": {
+	id: "2026-05-26-ink-effect-background-animation.md";
+  slug: "2026-05-26-ink-effect-background-animation";
+  body: string;
+  collection: "posts";
+  data: InferEntrySchema<"posts">
+} & { render(): Render[".md"] };
+"2026-05-26-ink-effect-墨汁扩散背景动效.md": {
+	id: "2026-05-26-ink-effect-墨汁扩散背景动效.md";
+  slug: "2026-05-26-ink-effect-墨汁扩散背景动效";
+  body: string;
+  collection: "posts";
+  data: InferEntrySchema<"posts">
+} & { render(): Render[".md"] };
 "design/2026-05-11-design-philosophy.md": {
 	id: "design/2026-05-11-design-philosophy.md";
   slug: "design/2026-05-11-design-philosophy";
