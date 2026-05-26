@@ -15,9 +15,11 @@ interface Props {
   allPosts: Post[]
   relatedMap?: Record<string, { link: string; title: string }[]>
   sidebarItems?: SidebarItem[]
+  inkEffect?: string
+  inkEffectOpacity?: number
 }
 
-const { title, description, nav, frontmatter, body, currentUrl, allPosts, relatedMap, sidebarItems = [] } = Astro.props
+const { title, description, nav, frontmatter, body, currentUrl, allPosts, relatedMap, sidebarItems = [], inkEffect = '', inkEffectOpacity = 1 } = Astro.props
 const tags = frontmatter.tags || []
 const wordCount = body
   .replace(/^---[\s\S]*?---/, '')
@@ -27,7 +29,7 @@ const wordCount = body
 const outline = extractOutline(body)
 ---
 
-<BaseLayout title={title} description={description} pageTitle={frontmatter.title} nav={nav} sidebarItems={sidebarItems} currentPath={currentUrl}>
+<BaseLayout title={title} description={description} pageTitle={frontmatter.title} nav={nav} sidebarItems={sidebarItems} currentPath={currentUrl} inkEffect={inkEffect} inkEffectOpacity={inkEffectOpacity}>
   <article>
     <header class="article-header">
       {frontmatter.title && <h1 class="article-title">{frontmatter.title}</h1>}

@@ -23,7 +23,7 @@
 
   --vp-nav-height: 56px;
 
-  --vp-sidebar-bg-color: var(--paper);
+  --vp-sidebar-bg-color: transparent;
 }
 
 .dark {
@@ -39,7 +39,7 @@
   --vp-c-divider: var(--border-faint);
   --vp-c-border: var(--border);
 
-  --vp-sidebar-bg-color: var(--paper);
+  --vp-sidebar-bg-color: transparent;
 }
 
 /* Nav */

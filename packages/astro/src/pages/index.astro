@@ -9,6 +9,6 @@ const posts = await getSortedPosts(config.postsBase)
 const sidebarItems = await getSidebarItems('home', config.sidebar, config.postsBase)
 ---
 
-<BaseLayout title={config.title} description={config.description} nav={config.nav} sidebarItems={sidebarItems} currentPath={Astro.url.pathname}>
+<BaseLayout title={config.title} description={config.description} nav={config.nav} sidebarItems={sidebarItems} currentPath={Astro.url.pathname} inkEffect={config.inkEffect} inkEffectOpacity={config.inkEffectOpacity}>
   <HomeLayout posts={posts} title={config.title} description={config.description} />
 </BaseLayout>

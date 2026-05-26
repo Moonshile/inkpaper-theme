@@ -1,6 +1,7 @@
 ---
 import Nav from './Nav.astro'
 import Sidebar from './Sidebar.astro'
+import InkEffect from './InkEffect.astro'
 import type { SidebarItem } from '../types.ts'
 import '../styles/global.css'
 
@@ -11,6 +12,8 @@ interface Props {
   nav?: { text: string; link: string }[]
   sidebarItems?: SidebarItem[]
   currentPath?: string
+  inkEffect?: string
+  inkEffectOpacity?: number
 }
 
 const {
@@ -24,6 +27,8 @@ const {
   ],
   sidebarItems = [],
   currentPath = '',
+  inkEffect = '',
+  inkEffectOpacity = 1,
 } = Astro.props
 
 const displayTitle = pageTitle ? `${pageTitle} - ${title}` : title
@@ -49,6 +54,7 @@ const hasAside = Astro.slots.has('aside')
   </script>
 </head>
 <body>
+  <InkEffect effect={inkEffect} opacity={inkEffectOpacity} />
   <Nav title={title} nav={nav} />
   <div class="VPDoc">
     <div class:list={['doc-container', { 'has-sidebar': hasSidebar, 'has-aside': hasAside }]}>

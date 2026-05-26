@@ -16,6 +16,8 @@ export default function inkpaper(config: InkpaperConfig = {}): AstroIntegration 
     ],
     sidebar: config.sidebar ?? {},
     related: config.related ?? {},
+    inkEffect: config.inkEffect ?? '',
+    inkEffectOpacity: config.inkEffectOpacity ?? 1,
   }
 
   return {

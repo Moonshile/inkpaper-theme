@@ -41,7 +41,7 @@ const latestDate = allPosts.length
   : ''
 ---
 
-<BaseLayout title={config.title} description={config.description} pageTitle={period} nav={config.nav} sidebarItems={sidebarItems} currentPath={Astro.url.pathname}>
+<BaseLayout title={config.title} description={config.description} pageTitle={period} nav={config.nav} sidebarItems={sidebarItems} currentPath={Astro.url.pathname} inkEffect={config.inkEffect} inkEffectOpacity={config.inkEffectOpacity}>
   <div class="category-page">
     <h1 class="category-title">{period}</h1>
 

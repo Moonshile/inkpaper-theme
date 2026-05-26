@@ -35,4 +35,6 @@ export interface InkpaperConfig {
   nav?: { text: string; link: string }[]
   sidebar?: SidebarOptions
   related?: Record<string, { link: string; title: string }[]>
+  inkEffect?: string
+  inkEffectOpacity?: number
 }

@@ -6,6 +6,8 @@ export default defineConfig({
     inkpaper({
       title: 'inkpaper',
       description: 'An ink-and-paper style Astro theme',
+      inkEffect: 'bleedEdge',
+      inkEffectOpacity: 0.8,
     }),
   ],
   markdown: {

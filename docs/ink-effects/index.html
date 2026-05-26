@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>墨汁扩散晕染背景动效 - 方案选择</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  min-height: 100vh; background: #f5f2eb;
+  font-family: 'Noto Serif SC', 'Source Han Serif CN', serif;
+  padding: 40px 20px;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+h1 { font-size: 28px; color: #333; margin-bottom: 8px; text-align: center; }
+.subtitle { text-align: center; color: #777; margin-bottom: 40px; font-size: 14px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); gap: 24px; }
+.card {
+  position: relative; overflow: hidden;
+  background: #f5f2eb; border: 1px solid #d5d0c8; border-radius: 12px;
+  height: 300px;
+}
+.card canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.card-content {
+  position: relative; z-index: 1; padding: 24px;
+  background: linear-gradient(180deg, rgba(245,242,235,0.92) 0%, rgba(245,242,235,0.5) 60%, rgba(245,242,235,0) 100%);
+}
+.card-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.card-num { font-size: 12px; color: #999; }
+.card-name { font-size: 13px; color: #fff; background: #444; padding: 2px 8px; border-radius: 3px; font-family: monospace; }
+.card-title { font-size: 20px; color: #222; font-weight: 600; margin-bottom: 8px; }
+.card-desc { font-size: 14px; color: #555; line-height: 1.7; }
+.divider { border: none; border-top: 1px dashed #ccc; margin: 40px 0 20px; }
+.note { text-align: center; color: #888; font-size: 13px; line-height: 1.8; }
+code { background: #eee; padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>墨汁扩散晕染背景动效</h1>
+  <p class="subtitle">共 6 种方案，卡片背景即为实时演示。所有方案均为缓慢扩散、越散越淡直至消失。</p>
+
+  <div class="grid">
+    <div class="card" id="card1">
+      <canvas></canvas>
+      <div class="card-content">
+        <div class="card-header"><span class="card-num">方案 1</span><span class="card-name">inkDrop</span></div>
+        <div class="card-title">水墨滴落渗透</div>
+        <div class="card-desc">墨滴从中心向外缓慢渗透扩散，边缘不规则如纤维渗透。出现频率低，沉静悠然。</div>
+      </div>
+    </div>
+
+    <div class="card" id="card2">
+      <canvas></canvas>
+      <div class="card-content">
+        <div class="card-header"><span class="card-num">方案 2</span><span class="card-name">fiberBleed</span></div>
+        <div class="card-title">宣纸纤维渗透</div>
+        <div class="card-desc">浓墨中心向外渗出细密的纤维触须，模拟墨汁被宣纸纤维吸收后沿纤维方向扩散的效果。</div>
+      </div>
+    </div>
+
+    <div class="card" id="card3">
+      <canvas></canvas>
+      <div class="card-content">
+        <div class="card-header"><span class="card-num">方案 3</span><span class="card-name">splash</span></div>
+        <div class="card-title">泼墨飞溅</div>
+        <div class="card-desc">主墨团与飞溅墨点同时出现，然后各自缓慢扩散消散。如泼墨落纸一瞬后渐渐被纸吸收。</div>
+      </div>
+    </div>
+
+    <div class="card" id="card4">
+      <canvas></canvas>
+      <div class="card-content">
+        <div class="card-header"><span class="card-num">方案 4</span><span class="card-name">waterCloud</span></div>
+        <div class="card-title">墨汁入水扩散</div>
+        <div class="card-desc">淡墨云团缓慢膨胀扩散，如墨汁滴入清水般柔和飘逸。出现频率低，氤氲朦胧。</div>
+      </div>
+    </div>
+
+    <div class="card" id="card5">
+      <canvas></canvas>
+      <div class="card-content">
+        <div class="card-header"><span class="card-num">方案 5</span><span class="card-name">bleedEdge</span></div>
+        <div class="card-title">墨迹洇开</div>
+        <div class="card-desc">墨迹整体边界平滑地缓慢向外洇开推进，浓度均匀递减。边缘柔和自然，无突兀中心。</div>
+      </div>
+    </div>
+
+    <div class="card" id="card6">
+      <canvas></canvas>
+      <div class="card-content">
+        <div class="card-header"><span class="card-num">方案 6</span><span class="card-name">layeredInk</span></div>
+        <div class="card-title">积墨层染</div>
+        <div class="card-desc">多层薄墨依次扩散叠加，每层扩散后渐淡，短暂形成浓淡层次后整体消退。</div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+  <p class="note">
+    配置方式：<code>inkEffect: "方案名"</code>，如 <code>inkEffect: "inkDrop"</code><br>
+    设为空字符串或不配置则不启用动效。默认不启用。<br>
+    可选值：<code>inkDrop</code> | <code>fiberBleed</code> | <code>splash</code> | <code>waterCloud</code> | <code>bleedEdge</code> | <code>layeredInk</code>
+  </p>
+</div>
+
+<script>
+function initCard(id, effectFn) {
+  const card = document.getElementById(id);
+  const canvas = card.querySelector('canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize() { const r = card.getBoundingClientRect(); W = canvas.width = r.width; H = canvas.height = r.height; }
+  resize(); window.addEventListener('resize', resize);
+  effectFn(ctx, () => W, () => H);
+}
+
+// 1. inkDrop — 低频率，平滑自然的墨滴轮廓，相邻墨滴保持距离
+initCard('card1', (ctx, gW, gH) => {
+  class Drop {
+    constructor(x, y) {
+      this.x = x; this.y = y;
+      this.maxR = 70 + Math.random() * 50;
+      // Generate shape — natural ink drop irregularity, not too spiky, not too round
+      const n = 36;
+      const raw = Array.from({length: n}, () => 0.75 + Math.random() * 0.5);
+      for (let pass = 0; pass < 1; pass++) {
+        for (let i = 0; i < n; i++) {
+          const prev = raw[(i-1+n)%n], next = raw[(i+1)%n];
+          raw[i] = raw[i]*0.5 + (prev+next)*0.25;
+        }
+      }
+      this.shape = raw;
+      this.born = performance.now();
+      this.duration = 12000 + Math.random() * 6000;
+    }
+    draw(now) {
+      const t = (now - this.born) / this.duration;
+      if (t > 1) return false;
+      const r = this.maxR * Math.pow(t, 0.4);
+      const alpha = 0.15 * (1 - t);
+      ctx.save(); ctx.filter = 'blur(3px)'; ctx.beginPath();
+      const n = this.shape.length;
+      for (let i = 0; i <= n; i++) {
+        const idx = i % n, ang = (Math.PI * 2 / n) * i;
+        const pr = r * this.shape[idx];
+        i === 0 ? ctx.moveTo(this.x + Math.cos(ang)*pr, this.y + Math.sin(ang)*pr) : ctx.lineTo(this.x + Math.cos(ang)*pr, this.y + Math.sin(ang)*pr);
+      }
+      ctx.closePath(); ctx.fillStyle = `rgba(10,8,5,${alpha})`; ctx.fill(); ctx.restore();
+      return true;
+    }
+  }
+  let drops = [];
+  function addDrop() {
+    const W = gW(), H = gH();
+    const minDist = 150;
+    let attempts = 0, x, y;
+    do {
+      x = Math.random() * W; y = Math.random() * H;
+      attempts++;
+    } while (attempts < 20 && drops.some(d => Math.hypot(d.x - x, d.y - y) < minDist));
+    drops.push(new Drop(x, y));
+  }
+  addDrop();
+  setInterval(addDrop, 7000);
+  (function run() {
+    const now = performance.now();
+    ctx.clearRect(0, 0, gW(), gH());
+    drops = drops.filter(d => d.draw(now));
+    requestAnimationFrame(run);
+  })();
+});
+
+// 2. fiberBleed — 纤维渗透：淡墨底+不规则方向纤维丝从边缘延伸，无明显黑心
+initCard('card2', (ctx, gW, gH) => {
+  class Fiber {
+    constructor() {
+      this.x = Math.random() * gW(); this.y = Math.random() * gH();
+      this.born = performance.now(); this.duration = 11000 + Math.random() * 4000;
+      this.baseR = 20 + Math.random() * 15;
+      // Generate fibers as random-walk paths starting from the edge of the base blob
+      this.fibers = [];
+      const count = 30 + Math.floor(Math.random() * 25);
+      for (let i = 0; i < count; i++) {
+        // Start from a random point on the blob edge
+        const startAngle = Math.random() * Math.PI * 2;
+        const startR = this.baseR * (0.7 + Math.random() * 0.3);
+        const sx = Math.cos(startAngle) * startR;
+        const sy = Math.sin(startAngle) * startR;
+        // Walk outward in a random-ish direction (biased outward but irregular)
+        const path = [{x: sx, y: sy}];
+        let dir = startAngle + (Math.random() - 0.5) * 1.5;
+        const segments = 3 + Math.floor(Math.random() * 5);
+        let cx = sx, cy = sy;
+        for (let s = 0; s < segments; s++) {
+          dir += (Math.random() - 0.5) * 1.4;
+          const step = 4 + Math.random() * 10;
+          cx += Math.cos(dir) * step;
+          cy += Math.sin(dir) * step;
+          path.push({x: cx, y: cy});
+          // Occasional branch
+          if (Math.random() < 0.3 && s < segments - 1) {
+            const branchDir = dir + (Math.random() - 0.5) * 2;
+            const branchLen = 3 + Math.random() * 8;
+            path.push({x: cx + Math.cos(branchDir)*branchLen, y: cy + Math.sin(branchDir)*branchLen, branch: true});
+          }
+        }
+        this.fibers.push({
+          path,
+          width: 0.3 + Math.random() * 1.0,
+        });
+      }
+      // Base blob shape (smooth)
+      const n = 28;
+      const raw = Array.from({length: n}, () => 0.8 + Math.random() * 0.4);
+      for (let pass = 0; pass < 4; pass++) {
+        for (let i = 0; i < n; i++) {
+          const prev = raw[(i-1+n)%n], next = raw[(i+1)%n];
+          raw[i] = raw[i]*0.5 + (prev+next)*0.25;
+        }
+      }
+      this.blobShape = raw;
+    }
+    draw(now) {
+      const t = (now - this.born) / this.duration;
+      if (t > 1) return false;
+      const grow = Math.pow(Math.min(t * 2.5, 1), 0.5);
+      const fade = 1 - t;
+      // Base blob — fixed size, just fades
+      ctx.save(); ctx.filter = 'blur(4px)';
+      ctx.beginPath();
+      const n = this.blobShape.length;
+      for (let i = 0; i <= n; i++) {
+        const idx = i % n, ang = (Math.PI*2/n)*i;
+        const pr = this.baseR * this.blobShape[idx];
+        i === 0 ? ctx.moveTo(this.x+Math.cos(ang)*pr, this.y+Math.sin(ang)*pr) : ctx.lineTo(this.x+Math.cos(ang)*pr, this.y+Math.sin(ang)*pr);
+      }
+      ctx.closePath();
+      ctx.fillStyle = `rgba(10,8,5,${0.07 * fade})`;
+      ctx.fill(); ctx.restore();
+      // Fibers — extend outward over time, positions are fixed once drawn
+      for (const f of this.fibers) {
+        const totalPts = f.path.length;
+        const visiblePts = grow * totalPts;
+        if (visiblePts < 1) continue;
+        ctx.beginPath();
+        let lastMain = f.path[0];
+        ctx.moveTo(this.x + f.path[0].x, this.y + f.path[0].y);
+        const fullSegs = Math.floor(visiblePts);
+        for (let s = 1; s <= Math.min(fullSegs, totalPts - 1); s++) {
+          const p = f.path[s];
+          if (p.branch) {
+            ctx.moveTo(this.x + lastMain.x, this.y + lastMain.y);
+            ctx.lineTo(this.x + p.x, this.y + p.y);
+          } else {
+            ctx.lineTo(this.x + p.x, this.y + p.y);
+            lastMain = p;
+          }
+        }
+        // Partial last segment for smooth extension
+        const frac = visiblePts - fullSegs;
+        if (frac > 0 && fullSegs < totalPts - 1) {
+          const prev = f.path[fullSegs];
+          const next = f.path[fullSegs + 1];
+          if (next && !next.branch) {
+            const px = prev.x + (next.x - prev.x) * frac;
+            const py = prev.y + (next.y - prev.y) * frac;
+            ctx.lineTo(this.x + px, this.y + py);
+          }
+        }
+        ctx.strokeStyle = `rgba(10,8,5,${0.07 * fade})`;
+        ctx.lineWidth = f.width;
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+      }
+      return true;
+    }
+  }
+  let drops = [];
+  function addFiber() {
+    const minDist = 120;
+    let attempts = 0, x, y;
+    do { x = Math.random()*gW(); y = Math.random()*gH(); attempts++; }
+    while (attempts < 20 && drops.some(d => Math.hypot(d.x-x, d.y-y) < minDist));
+    const f = new Fiber(); f.x = x; f.y = y; drops.push(f);
+  }
+  addFiber();
+  setInterval(addFiber, 5000);
+  (function run() {
+    const now = performance.now();
+    ctx.clearRect(0, 0, gW(), gH());
+    drops = drops.filter(d => d.draw(now));
+    requestAnimationFrame(run);
+  })();
+});
+
+// 3. splash — 主墨团+周围细密墨点同时出现，图形融合不叠加颜色，缓慢扩散消散
+initCard('card3', (ctx, gW, gH) => {
+  class Splash {
+    constructor() {
+      this.x = 0; this.y = 0;
+      this.born = performance.now(); this.duration = 10000 + Math.random() * 4000;
+      // Main blob shape
+      this.mainShape = [];
+      const n = 24;
+      for (let i = 0; i < n; i++) this.mainShape.push(0.6 + Math.random() * 0.8);
+      for (let pass = 0; pass < 3; pass++) {
+        for (let i = 0; i < n; i++) {
+          const prev = this.mainShape[(i-1+n)%n], next = this.mainShape[(i+1)%n];
+          this.mainShape[i] = this.mainShape[i]*0.5 + (prev+next)*0.25;
+        }
+      }
+      this.mainR = 20 + Math.random() * 15;
+      // Many scattered small blobs — positions stored as offsets from center
+      this.splats = [];
+      const count = 20 + Math.floor(Math.random() * 20);
+      for (let i = 0; i < count; i++) {
+        const a = Math.random() * Math.PI * 2;
+        const dist = 25 + Math.random() * 70;
+        const r = 2 + Math.random() * 8;
+        const shape = [];
+        const sn = 8;
+        for (let j = 0; j < sn; j++) shape.push(0.7 + Math.random()*0.6);
+        for (let pass = 0; pass < 2; pass++) {
+          for (let j = 0; j < sn; j++) {
+            const prev = shape[(j-1+sn)%sn], next = shape[(j+1)%sn];
+            shape[j] = shape[j]*0.5 + (prev+next)*0.25;
+          }
+        }
+        this.splats.push({
+          ox: Math.cos(a) * dist,
+          oy: Math.sin(a) * dist,
+          r, shape,
+        });
+      }
+    }
+    draw(now) {
+      const t = (now - this.born) / this.duration;
+      if (t > 1) return false;
+      const expand = 1 + Math.pow(t, 0.4) * 0.8;
+      const fade = 1 - t;
+      const alpha = 0.15 * fade;
+      // Draw all shapes as one unified path so overlaps merge without color stacking
+      ctx.save(); ctx.filter = 'blur(2px)';
+      ctx.beginPath();
+      // Main blob sub-path
+      const mn = this.mainShape.length;
+      for (let i = 0; i <= mn; i++) {
+        const idx = i % mn, ang = (Math.PI*2/mn)*i;
+        const r = this.mainR * this.mainShape[idx] * expand;
+        const px = this.x + Math.cos(ang)*r, py = this.y + Math.sin(ang)*r;
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      // Each splat as separate sub-path within same beginPath
+      for (const s of this.splats) {
+        const sn = s.shape.length;
+        const sx = this.x + s.ox, sy = this.y + s.oy;
+        for (let i = 0; i <= sn; i++) {
+          const idx = i % sn, ang = (Math.PI*2/sn)*i;
+          const r = s.r * s.shape[idx] * expand;
+          const px = sx + Math.cos(ang)*r, py = sy + Math.sin(ang)*r;
+          i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+      }
+      ctx.fillStyle = `rgba(10,8,5,${alpha})`;
+      ctx.fill();
+      ctx.restore();
+      return true;
+    }
+  }
+  let drops = [];
+  function addSplash() {
+    const minDist = 150;
+    let attempts = 0, x, y;
+    do { x = Math.random()*gW(); y = Math.random()*gH(); attempts++; }
+    while (attempts < 20 && drops.some(d => Math.hypot(d.x-x, d.y-y) < minDist));
+    const s = new Splash(); s.x = x; s.y = y; drops.push(s);
+  }
+  addSplash();
+  setInterval(addSplash, 5000);
+  (function run() {
+    const now = performance.now();
+    ctx.clearRect(0, 0, gW(), gH());
+    drops = drops.filter(d => d.draw(now));
+    requestAnimationFrame(run);
+  })();
+});
+
+// 4. waterCloud — 淡色墨云，频率低
+initCard('card4', (ctx, gW, gH) => {
+  class Cloud {
+    constructor() {
+      this.x = Math.random() * gW(); this.y = Math.random() * gH();
+      this.born = performance.now(); this.duration = 14000 + Math.random() * 5000;
+      this.blobs = [];
+      for (let i = 0; i < 5 + Math.floor(Math.random()*3); i++) {
+        this.blobs.push({ox: (Math.random()-0.5)*25, oy: (Math.random()-0.5)*25, maxR: 30+Math.random()*35, drift: {x:(Math.random()-0.5)*0.1, y:(Math.random()-0.5)*0.1}});
+      }
+    }
+    draw(now) {
+      const t = (now - this.born) / this.duration;
+      if (t > 1) return false;
+      const expand = Math.pow(t, 0.3);
+      const fade = 1 - t;
+      for (const b of this.blobs) {
+        const cx = this.x + b.ox + b.drift.x * t * 80;
+        const cy = this.y + b.oy + b.drift.y * t * 80;
+        const r = b.maxR * expand;
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+        g.addColorStop(0, `rgba(12,10,7,${0.08 * fade})`);
+        g.addColorStop(0.5, `rgba(15,12,8,${0.04 * fade})`);
+        g.addColorStop(1, 'rgba(20,15,10,0)');
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.fillStyle = g; ctx.fill();
+      }
+      return true;
+    }
+  }
+  let drops = [];
+  function addCloud() {
+    const minDist = 150;
+    let attempts = 0, x, y;
+    do { x = Math.random()*gW(); y = Math.random()*gH(); attempts++; }
+    while (attempts < 20 && drops.some(d => Math.hypot(d.x-x, d.y-y) < minDist));
+    const c = new Cloud(); c.x = x; c.y = y; drops.push(c);
+  }
+  addCloud();
+  setInterval(addCloud, 8000);
+  (function run() {
+    const now = performance.now();
+    ctx.clearRect(0, 0, gW(), gH());
+    drops = drops.filter(d => d.draw(now));
+    requestAnimationFrame(run);
+  })();
+});
+
+// 5. bleedEdge — 边界平滑地洇开，用径向渐变裁剪到不规则形状，无纹路
+initCard('card5', (ctx, gW, gH) => {
+  class Bleed {
+    constructor() {
+      this.x = Math.random() * gW(); this.y = Math.random() * gH();
+      this.born = performance.now(); this.duration = 10000 + Math.random() * 4000;
+      this.maxR = 55 + Math.random() * 50;
+      // Generate smooth shape
+      const base = [];
+      const n = 60;
+      for (let i = 0; i < n; i++) base.push(0.75 + Math.random() * 0.5);
+      for (let pass = 0; pass < 6; pass++) {
+        for (let i = 0; i < n; i++) {
+          const prev = base[(i-1+n)%n], next = base[(i+1)%n];
+          base[i] = base[i] * 0.5 + (prev + next) * 0.25;
+        }
+      }
+      this.shape = base;
+    }
+    draw(now) {
+      const t = (now - this.born) / this.duration;
+      if (t > 1) return false;
+      const expand = Math.pow(t, 0.35);
+      const fade = 1 - t;
+      const r = this.maxR * expand;
+      ctx.save();
+      ctx.filter = 'blur(5px)';
+      // Clip to the irregular shape
+      ctx.beginPath();
+      const n = this.shape.length;
+      for (let i = 0; i <= n; i++) {
+        const idx = i % n, ang = (Math.PI*2/n)*i;
+        const pr = r * this.shape[idx];
+        const px = this.x + Math.cos(ang)*pr, py = this.y + Math.sin(ang)*pr;
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.clip();
+      // Fill with a smooth radial gradient — no rings
+      const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r);
+      g.addColorStop(0, `rgba(10,8,5,${0.2 * fade})`);
+      g.addColorStop(0.6, `rgba(10,8,5,${0.11 * fade})`);
+      g.addColorStop(1, `rgba(10,8,5,${0.03 * fade})`);
+      ctx.fillStyle = g;
+      ctx.fillRect(this.x - r, this.y - r, r*2, r*2);
+      ctx.restore();
+      return true;
+    }
+  }
+  let drops = [];
+  function addBleed() {
+    const minDist = 140;
+    let attempts = 0, x, y;
+    do { x = Math.random()*gW(); y = Math.random()*gH(); attempts++; }
+    while (attempts < 20 && drops.some(d => Math.hypot(d.x-x, d.y-y) < minDist));
+    const b = new Bleed(); b.x = x; b.y = y; drops.push(b);
+  }
+  addBleed();
+  setInterval(addBleed, 5000);
+  (function run() {
+    const now = performance.now();
+    ctx.clearRect(0, 0, gW(), gH());
+    drops = drops.filter(d => d.draw(now));
+    requestAnimationFrame(run);
+  })();
+});
+
+// 6. layeredInk — 多层薄墨依次扩散叠加后消退
+initCard('card6', (ctx, gW, gH) => {
+  class Layer {
+    constructor(cx, cy, delay) {
+      this.x = cx + (Math.random()-0.5)*25; this.y = cy + (Math.random()-0.5)*25;
+      this.born = performance.now() + delay; this.duration = 8000 + Math.random()*3000;
+      this.maxR = 35 + Math.random()*45;
+      const raw = Array.from({length: 28}, () => 0.6 + Math.random()*0.8);
+      for (let pass = 0; pass < 3; pass++) {
+        for (let i = 0; i < 28; i++) {
+          const prev = raw[(i-1+28)%28], next = raw[(i+1)%28];
+          raw[i] = raw[i]*0.5 + (prev+next)*0.25;
+        }
+      }
+      this.shape = raw;
+    }
+    draw(now) {
+      const elapsed = now - this.born;
+      if (elapsed < 0) return true;
+      const t = elapsed / this.duration;
+      if (t > 1) return false;
+      const expand = Math.pow(t, 0.35);
+      const fade = 1 - t;
+      const r = this.maxR * expand;
+      ctx.save(); ctx.filter = 'blur(4px)'; ctx.beginPath();
+      for (let i = 0; i <= 28; i++) {
+        const idx = i % 28, ang = (Math.PI*2/28)*i;
+        const pr = r * this.shape[idx];
+        i === 0 ? ctx.moveTo(this.x+Math.cos(ang)*pr, this.y+Math.sin(ang)*pr) : ctx.lineTo(this.x+Math.cos(ang)*pr, this.y+Math.sin(ang)*pr);
+      }
+      ctx.closePath(); ctx.fillStyle = `rgba(10,8,5,${0.06 * fade})`; ctx.fill(); ctx.restore();
+      return true;
+    }
+  }
+  class Group {
+    constructor(cx, cy) {
+      this.x = cx; this.y = cy;
+      this.layers = [];
+      for (let i = 0; i < 4 + Math.floor(Math.random()*3); i++) {
+        this.layers.push(new Layer(cx, cy, i * 500));
+      }
+    }
+    draw(now) { this.layers = this.layers.filter(l => l.draw(now)); return this.layers.length > 0; }
+  }
+  let groups = [];
+  function addGroup() {
+    const minDist = 130;
+    let attempts = 0, x, y;
+    do { x = Math.random()*gW(); y = Math.random()*gH(); attempts++; }
+    while (attempts < 20 && groups.some(g => Math.hypot(g.x-x, g.y-y) < minDist));
+    groups.push(new Group(x, y));
+  }
+  addGroup();
+  setInterval(addGroup, 5000);
+  (function run() {
+    const now = performance.now();
+    ctx.clearRect(0, 0, gW(), gH());
+    groups = groups.filter(g => g.draw(now));
+    requestAnimationFrame(run);
+  })();
+});
+
+</script>
+</body>
+</html>

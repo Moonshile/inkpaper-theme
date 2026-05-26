@@ -3,9 +3,12 @@ import DefaultTheme from 'vitepress/theme'
 import { useData } from 'vitepress'
 import { onMounted } from 'vue'
 import ArticleAside from './components/ArticleAside.vue'
+import InkEffect from './components/InkEffect.vue'
 
 const { Layout } = DefaultTheme
-const { frontmatter } = useData()
+const { frontmatter, site } = useData()
+const inkEffect = (site.value.themeConfig?.inkEffect as string) || ''
+const inkEffectOpacity = (site.value.themeConfig?.inkEffectOpacity as number) ?? 1
 
 onMounted(() => {
   const saved = localStorage.getItem('ink-sidebar-width')
@@ -46,6 +49,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <InkEffect :effect="inkEffect" :opacity="inkEffectOpacity" />
   <Layout>
     <template #doc-before>
       <div v-if="frontmatter.title && frontmatter.date" class="article-header">

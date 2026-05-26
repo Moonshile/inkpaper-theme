@@ -1,0 +1,28 @@
+---
+interface Props {
+  effect?: string
+  opacity?: number
+}
+
+const { effect = '', opacity = 1 } = Astro.props
+---
+
+<canvas
+  id="ink-effect-canvas"
+  data-effect={effect}
+  data-opacity={String(opacity)}
+  style={effect ? 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;' : 'display:none;'}
+></canvas>
+
+<script>
+  import { initInkEffect } from '@inkpaper/core/ink-effect'
+
+  const canvas = document.getElementById('ink-effect-canvas') as HTMLCanvasElement
+  if (canvas) {
+    const effect = canvas.dataset.effect || ''
+    const opacity = parseFloat(canvas.dataset.opacity || '1')
+    if (effect) {
+      initInkEffect(canvas, { effect, opacity })
+    }
+  }
+</script>

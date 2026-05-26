@@ -18,6 +18,8 @@ export default defineConfig({
     outline: { level: [2, 3], label: 'On this page' },
     search: {
       provider: 'local'
-    }
+    },
+    inkEffect: 'bleedEdge',
+    inkEffectOpacity: 0.5
   }
 })

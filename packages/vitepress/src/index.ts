@@ -16,6 +16,7 @@ export { default as TagsPage } from './components/TagsPage.vue'
 export { default as ArticleAside } from './components/ArticleAside.vue'
 export { default as CategoryPage } from './components/CategoryPage.vue'
 export { default as ArchivePeriodPage } from './components/ArchivePeriodPage.vue'
+export { default as InkEffect } from './components/InkEffect.vue'
 
 export interface ThemeEnhanceConfig {
   posts: Post[]
