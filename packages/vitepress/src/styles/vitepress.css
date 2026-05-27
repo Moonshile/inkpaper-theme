@@ -201,15 +201,31 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 4px;
+  width: 8px;
+  margin-right: -4px;
   height: 100%;
   cursor: col-resize;
   background: transparent;
-  transition: background 0.2s;
   z-index: 10;
 }
 
-.ink-sidebar-resize:hover,
-.ink-sidebar-resize.dragging {
-  background: var(--vp-c-border);
+.ink-sidebar-resize::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100%;
+  border-radius: 1px;
+  background: var(--vp-c-divider);
+  transition: background 0.2s, width 0.2s;
 }
+
+.ink-sidebar-resize:hover::after,
+.ink-sidebar-resize.dragging::after {
+  width: 3px;
+  background: var(--vp-c-brand-1);
+  opacity: 0.6;
+}
+

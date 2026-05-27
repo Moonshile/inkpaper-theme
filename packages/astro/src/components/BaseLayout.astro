@@ -148,17 +148,32 @@ const hasAside = Astro.slots.has('aside')
     position: absolute;
     top: 0;
     right: 0;
-    width: 4px;
+    width: 8px;
+    margin-right: -4px;
     height: 100%;
     cursor: col-resize;
     background: transparent;
-    transition: background 0.2s;
     z-index: 10;
   }
 
-  .doc-sidebar-resize:hover,
-  .doc-sidebar-resize.dragging {
-    background: var(--border);
+  .doc-sidebar-resize::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    border-radius: 1px;
+    background: var(--border-faint);
+    transition: background 0.2s, width 0.2s;
+  }
+
+  .doc-sidebar-resize:hover::after,
+  .doc-sidebar-resize.dragging::after {
+    width: 3px;
+    background: var(--vermillion);
+    opacity: 0.6;
   }
 
   .doc-sidebar-inner {

@@ -73,14 +73,16 @@ function buildDirectoryTree(posts: RawPost[], postsBase: string, baseDir = ''): 
         link: `/category/${childDir}`,
         collapsed: childDir !== latestSubDir,
         items: posts.filter(p => p.slug.startsWith(childDir + '/') && !p.slug.slice(childDir.length + 1).includes('/')).map(p => ({
-          text: `${p.date} ${p.title}`,
+          text: p.title,
+          date: p.date,
           link: `${postsBase}/${p.slug}`,
         })),
       })
     }
     for (const p of directChildren) {
       childItems.push({
-        text: `${p.date} ${p.title}`,
+        text: p.title,
+        date: p.date,
         link: `${postsBase}/${p.slug}`,
       })
     }
@@ -96,7 +98,8 @@ function buildDirectoryTree(posts: RawPost[], postsBase: string, baseDir = ''): 
 
   for (const p of directPosts) {
     items.push({
-      text: `${p.date} ${p.title}`,
+      text: p.title,
+      date: p.date,
       link: `${postsBase}/${p.slug}`,
     })
   }
@@ -132,7 +135,8 @@ function buildDateTree(posts: RawPost[], postsBase: string): SidebarItem[] {
           link: `/archive/${month}`,
           collapsed: month !== latestMonth,
           items: yearMap[year][month].map(p => ({
-            text: `${p.date} ${p.title}`,
+            text: p.title,
+            date: p.date,
             link: `${postsBase}/${p.slug}`,
           })),
         })),

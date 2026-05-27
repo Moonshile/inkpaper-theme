@@ -10,9 +10,25 @@ const { frontmatter, site } = useData()
 const inkEffect = (site.value.themeConfig?.inkEffect as string) || ''
 const inkEffectOpacity = (site.value.themeConfig?.inkEffectOpacity as number) ?? 1
 
+function styleSidebarDates() {
+  const dateRegex = /^(\d{4}-\d{2}-\d{2})\s+(.+)$/
+  document.querySelectorAll('.VPSidebarItem .text').forEach(el => {
+    const text = el.textContent || ''
+    const match = text.match(dateRegex)
+    if (match && !el.querySelector('.sidebar-date')) {
+      el.innerHTML = `${match[2]}<span class="sidebar-date">${match[1]}</span>`
+    }
+  })
+}
+
 onMounted(() => {
   const saved = localStorage.getItem('ink-sidebar-width')
   if (saved) document.documentElement.style.setProperty('--vp-sidebar-width', saved + 'px')
+
+  styleSidebarDates()
+  const observer = new MutationObserver(styleSidebarDates)
+  const sidebarEl = document.querySelector('.VPSidebar')
+  if (sidebarEl) observer.observe(sidebarEl, { childList: true, subtree: true })
 
   const sidebar = document.querySelector<HTMLElement>('.VPSidebar')
   if (!sidebar) return

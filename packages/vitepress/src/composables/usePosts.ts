@@ -7,6 +7,7 @@ export interface Post {
   date: string
   tags: string[]
   order: number
+  wordCount?: number
 }
 
 export const postsKey: InjectionKey<Ref<Post[]>> = Symbol.for('inkpaper-posts')

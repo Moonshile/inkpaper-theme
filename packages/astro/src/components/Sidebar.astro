@@ -46,7 +46,7 @@ const { items, currentPath = '' } = Astro.props
                             <div class="item">
                               <a href={leaf.link} class:list={['link', { active: currentPath === leaf.link }]}>
                                 <span class="indicator" />
-                                <span class="text">{leaf.text}</span>
+                                <span class="text">{leaf.text}{leaf.date && <span class="sidebar-date">{leaf.date}</span>}</span>
                               </a>
                             </div>
                           </li>
@@ -57,7 +57,7 @@ const { items, currentPath = '' } = Astro.props
                     <div class="item">
                       <a href={child.link} class:list={['link', { active: currentPath === child.link }]}>
                         <span class="indicator" />
-                        <span class="text">{child.text}</span>
+                        <span class="text">{child.text}{child.date && <span class="sidebar-date">{child.date}</span>}</span>
                       </a>
                     </div>
                   )}
@@ -69,7 +69,7 @@ const { items, currentPath = '' } = Astro.props
           <div class="item">
             <a href={item.link} class:list={['link', { active: currentPath === item.link }]}>
               <span class="indicator" />
-              <span class="text">{item.text}</span>
+              <span class="text">{item.text}{item.date && <span class="sidebar-date">{item.date}</span>}</span>
             </a>
           </div>
         )}
@@ -236,4 +236,5 @@ const { items, currentPath = '' } = Astro.props
   .VPSidebarItem.collapsible > .folder-group > .item .indicator {
     display: none;
   }
+
 </style>

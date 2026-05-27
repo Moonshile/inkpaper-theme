@@ -5,6 +5,11 @@ import { usePosts } from '../composables/usePosts'
 
 const posts = usePosts()
 
+function readingTime(wordCount: number): string {
+  const minutes = Math.max(1, Math.round(wordCount / 400))
+  return `${minutes} min`
+}
+
 const grouped = computed(() => {
   const map: Record<string, typeof posts> = {}
   posts.forEach(p => {
@@ -23,7 +28,10 @@ const grouped = computed(() => {
       <ul class="post-list">
         <li v-for="post in yearPosts" :key="post.url">
           <a :href="withBase(post.url)" class="post-list-title">{{ post.title }}</a>
-          <div class="post-meta">{{ post.date }} · {{ post.tags.join(', ') }}</div>
+          <div class="post-meta">
+            {{ post.date }} · {{ post.tags.join(', ') }}
+            <span v-if="post.wordCount"> · {{ post.wordCount }} 字 · {{ readingTime(post.wordCount) }}</span>
+          </div>
         </li>
       </ul>
     </div>

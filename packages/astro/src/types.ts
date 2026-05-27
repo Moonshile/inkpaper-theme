@@ -1,11 +1,3 @@
-export interface Post {
-  title: string
-  slug: string
-  url: string
-  date: string
-  tags: string[]
-  order: number
-}
 
 export type SidebarTree = 'directory' | 'date'
 
@@ -23,9 +15,20 @@ export interface SidebarOptions {
 
 export interface SidebarItem {
   text: string
+  date?: string
   link?: string
   collapsed?: boolean
   items?: SidebarItem[]
+}
+
+export interface Post {
+  title: string
+  slug: string
+  url: string
+  date: string
+  tags: string[]
+  order: number
+  wordCount?: number
 }
 
 export interface InkpaperConfig {

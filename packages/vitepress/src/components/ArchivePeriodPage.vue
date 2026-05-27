@@ -3,6 +3,11 @@ import { computed } from 'vue'
 import { useData, withBase } from 'vitepress'
 import { usePosts } from '../composables/usePosts'
 
+function readingTime(wordCount: number): string {
+  const minutes = Math.max(1, Math.round(wordCount / 400))
+  return `${minutes} min`
+}
+
 const props = defineProps<{
   period?: string
 }>()
@@ -92,6 +97,7 @@ const latestDate = computed(() => {
           <div class="post-meta">
             {{ post.date }}
             <span v-if="post.tags.length"> · {{ post.tags.join(', ') }}</span>
+            <span v-if="post.wordCount"> · {{ post.wordCount }} 字 · {{ readingTime(post.wordCount) }}</span>
           </div>
         </li>
       </ul>

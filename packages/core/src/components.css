@@ -132,6 +132,12 @@
   letter-spacing: 0.02em;
 }
 
+.sidebar-date {
+  font-size: 11px;
+  color: var(--ink-ghost);
+  margin-left: 8px;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

@@ -10,6 +10,11 @@ const { posts } = Astro.props
 const tagMap: Record<string, number> = {}
 posts.forEach(p => p.tags.forEach(t => { tagMap[t] = (tagMap[t] || 0) + 1 }))
 const allTags = Object.entries(tagMap).sort((a, b) => b[1] - a[1])
+
+function readingTime(wordCount: number): string {
+  const minutes = Math.max(1, Math.round(wordCount / 400))
+  return `${minutes} min`
+}
 ---
 
 <div class="tags-page">
@@ -25,7 +30,12 @@ const allTags = Object.entries(tagMap).sort((a, b) => b[1] - a[1])
     {posts.map(post => (
       <li data-tags={post.tags.join(',')}>
         <a href={post.url} class="post-list-title">{post.title}</a>
-        <div class="post-meta">{post.date} &middot; {post.tags.join(', ')}</div>
+        <div class="post-meta">
+          {post.date} &middot; {post.tags.join(', ')}
+          {post.wordCount != null && post.wordCount > 0 && (
+            <span> &middot; {post.wordCount} 字 &middot; {readingTime(post.wordCount)}</span>
+          )}
+        </div>
       </li>
     ))}
   </ul>

@@ -15,6 +15,11 @@ const { site } = useData()
 
 const posts = usePosts()
 
+function readingTime(wordCount) {
+  const minutes = Math.max(1, Math.round(wordCount / 400))
+  return `${minutes} min`
+}
+
 const totalPosts = computed(() => posts.length)
 
 const allTags = computed(() => {
@@ -74,6 +79,7 @@ const lastUpdate = computed(() => posts[0]?.date || '-')
           <div class="post-meta">
             {{ post.date }}
             <span v-if="post.tags.length"> · {{ post.tags.join(', ') }}</span>
+            <span v-if="post.wordCount"> · {{ post.wordCount }} 字 · {{ readingTime(post.wordCount) }}</span>
           </div>
         </li>
       </ul>

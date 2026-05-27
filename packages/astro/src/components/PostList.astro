@@ -7,6 +7,11 @@ interface Props {
 }
 
 const { posts, animateDelay = false } = Astro.props
+
+function readingTime(wordCount: number): string {
+  const minutes = Math.max(1, Math.round(wordCount / 400))
+  return `${minutes} min`
+}
 ---
 
 <ul class="post-list">
@@ -16,6 +21,9 @@ const { posts, animateDelay = false } = Astro.props
       <div class="post-meta">
         {post.date}
         {post.tags.length > 0 && <span> &middot; {post.tags.join(', ')}</span>}
+        {post.wordCount != null && post.wordCount > 0 && (
+          <span> &middot; {post.wordCount} 字 &middot; {readingTime(post.wordCount)}</span>
+        )}
       </div>
     </li>
   ))}
