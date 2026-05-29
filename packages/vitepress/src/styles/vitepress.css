@@ -192,6 +192,19 @@
   display: none !important;
 }
 
+/* Wide-screen layout: sidebar flush left, content fills remaining space.
+   VitePress uses --vp-layout-max-width to center the layout at 1440px+.
+   Setting it very large disables the centering so sidebar stays at left edge. */
+:root {
+  --vp-layout-max-width: 100vw;
+}
+
+/* Article page: content fills all space between sidebar and aside.
+   Uses !important to override VitePress scoped styles (which have [data-v-xxx] specificity). */
+.VPDoc.has-aside .content-container {
+  max-width: none !important;
+}
+
 /* Sidebar resize handle */
 .VPSidebar {
   position: relative;

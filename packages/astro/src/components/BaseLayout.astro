@@ -104,6 +104,10 @@ const hasAside = Astro.slots.has('aside')
     .VPDoc {
       padding: 48px 32px 0;
     }
+    .VPDoc:has(.has-sidebar) {
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
 
   .doc-container {
@@ -120,12 +124,18 @@ const hasAside = Astro.slots.has('aside')
     .doc-container:not(.has-sidebar) .doc-content-container {
       max-width: 752px;
     }
+    .doc-container.has-sidebar {
+      display: flex;
+    }
   }
 
   @media (min-width: 1280px) {
-    .doc-container {
+    .doc-container:not(.has-sidebar) {
       display: flex;
       justify-content: center;
+    }
+    .doc-container.has-sidebar {
+      display: flex;
     }
   }
 
@@ -142,6 +152,13 @@ const hasAside = Astro.slots.has('aside')
     position: relative;
     width: var(--ink-sidebar-width);
     flex-shrink: 0;
+    padding-left: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .doc-sidebar {
+      padding-left: 32px;
+    }
   }
 
   .doc-sidebar-resize {
@@ -188,6 +205,8 @@ const hasAside = Astro.slots.has('aside')
     position: relative;
     margin: 0 auto;
     width: 100%;
+    flex: 1;
+    min-width: 0;
   }
 
   @media (min-width: 960px) {
@@ -209,17 +228,17 @@ const hasAside = Astro.slots.has('aside')
   }
 
   .doc-container.has-aside .doc-content {
-    max-width: 688px;
+    max-width: none;
   }
 
   .doc-aside {
     position: relative;
     display: none;
     order: 2;
-    flex-grow: 1;
+    flex-shrink: 0;
     padding-left: 32px;
-    width: 100%;
-    max-width: 256px;
+    padding-right: 24px;
+    width: 280px;
   }
 
   @media (min-width: 1280px) {
