@@ -2,13 +2,9 @@
 import { computed } from 'vue'
 import { withBase } from 'vitepress'
 import { usePosts } from '../composables/usePosts'
+import { readingTime } from '@inkpaper/core/count-words'
 
 const posts = usePosts()
-
-function readingTime(wordCount: number): string {
-  const minutes = Math.max(1, Math.round(wordCount / 400))
-  return `${minutes} min`
-}
 
 const grouped = computed(() => {
   const map: Record<string, typeof posts> = {}

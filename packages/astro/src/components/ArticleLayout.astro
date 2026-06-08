@@ -4,6 +4,7 @@ import ArticleAside from './ArticleAside.astro'
 import Outline from './Outline.astro'
 import type { Post, SidebarItem } from '../types.ts'
 import { extractOutline } from '../utils/outline.ts'
+import { countWords } from '@inkpaper/core/count-words'
 
 interface Props {
   title: string
@@ -21,11 +22,7 @@ interface Props {
 
 const { title, description, nav, frontmatter, body, currentUrl, allPosts, relatedMap, sidebarItems = [], inkEffect = '', inkEffectOpacity = 1 } = Astro.props
 const tags = frontmatter.tags || []
-const wordCount = body
-  .replace(/^---[\s\S]*?---/, '')
-  .replace(/[#*`\[\]()>_~|{}\-=]/g, '')
-  .replace(/\s+/g, '')
-  .length
+const wordCount = countWords(body)
 const outline = extractOutline(body)
 ---
 

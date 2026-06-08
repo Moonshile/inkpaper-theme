@@ -2,13 +2,9 @@
 import { ref, computed, onMounted } from 'vue'
 import { withBase } from 'vitepress'
 import { usePosts } from '../composables/usePosts'
+import { readingTime } from '@inkpaper/core/count-words'
 
 const posts = usePosts()
-
-function readingTime(wordCount: number): string {
-  const minutes = Math.max(1, Math.round(wordCount / 400))
-  return `${minutes} min`
-}
 
 const selectedTag = ref<string | null>(null)
 

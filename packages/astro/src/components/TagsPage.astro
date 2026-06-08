@@ -1,5 +1,6 @@
 ---
 import type { Post } from '../types.ts'
+import { readingTime } from '@inkpaper/core/count-words'
 
 interface Props {
   posts: Post[]
@@ -10,11 +11,6 @@ const { posts } = Astro.props
 const tagMap: Record<string, number> = {}
 posts.forEach(p => p.tags.forEach(t => { tagMap[t] = (tagMap[t] || 0) + 1 }))
 const allTags = Object.entries(tagMap).sort((a, b) => b[1] - a[1])
-
-function readingTime(wordCount: number): string {
-  const minutes = Math.max(1, Math.round(wordCount / 400))
-  return `${minutes} min`
-}
 ---
 
 <div class="tags-page">

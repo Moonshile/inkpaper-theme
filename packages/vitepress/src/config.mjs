@@ -24,8 +24,14 @@ function parseFrontmatter(filePath) {
   const match = content.match(/^---\n([\s\S]*?)\n---/)
   if (!match) return null
   const fm = match[1]
+
+  // Parse title: strip YAML quotes and handle colons
+  let rawTitle = fm.match(/title:\s*(.+)/)?.[1]?.trim() || ''
+  // Remove YAML string quotes if present
+  rawTitle = rawTitle.replace(/^["'](.*)["']$/, '$1')
+
   return {
-    title: fm.match(/title:\s*(.+)/)?.[1]?.trim() || '',
+    title: rawTitle,
     date: fm.match(/date:\s*(.+)/)?.[1]?.trim() || '',
     order: Number(fm.match(/order:\s*(\d+)/)?.[1] || '0')
   }

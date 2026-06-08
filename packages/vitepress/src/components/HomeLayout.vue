@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { withBase, useData } from 'vitepress'
 import { usePosts } from '../composables/usePosts'
+import { readingTime } from '@inkpaper/core/count-words'
 
 const props = withDefaults(defineProps<{
   maxTags?: number
@@ -14,11 +15,6 @@ const props = withDefaults(defineProps<{
 const { site } = useData()
 
 const posts = usePosts()
-
-function readingTime(wordCount) {
-  const minutes = Math.max(1, Math.round(wordCount / 400))
-  return `${minutes} min`
-}
 
 const totalPosts = computed(() => posts.length)
 

@@ -1,6 +1,6 @@
 {
   "name": "@inkpaper/core",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "type": "module",
   "main": "src/index.css",
   "exports": {
@@ -9,7 +9,8 @@
     "./texture": "./src/texture.css",
     "./typography": "./src/typography.css",
     "./components": "./src/components.css",
-    "./ink-effect": "./src/ink-effect.js"
+    "./ink-effect": "./src/ink-effect.js",
+    "./count-words": "./src/count-words.js"
   },
   "files": [
     "src"

@@ -1,13 +1,6 @@
 import { getCollection } from 'astro:content'
 import type { Post } from '../types.ts'
-
-function countWords(body: string): number {
-  const cleaned = body
-    .replace(/^---[\s\S]*?---/, '')
-    .replace(/[#*`\[\]()>_~|{}\-=]/g, '')
-    .replace(/\s+/g, '')
-  return cleaned.length
-}
+import { countWords } from '@inkpaper/core/count-words'
 
 export async function getSortedPosts(postsBase = '/posts'): Promise<Post[]> {
   const entries = await getCollection('posts')

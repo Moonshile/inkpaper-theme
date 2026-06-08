@@ -1,5 +1,6 @@
 ---
 import type { Post } from '../types.ts'
+import { readingTime } from '@inkpaper/core/count-words'
 
 interface Props {
   posts: Post[]
@@ -7,11 +8,6 @@ interface Props {
 }
 
 const { posts, animateDelay = false } = Astro.props
-
-function readingTime(wordCount: number): string {
-  const minutes = Math.max(1, Math.round(wordCount / 400))
-  return `${minutes} min`
-}
 ---
 
 <ul class="post-list">

@@ -1,6 +1,7 @@
 ---
 import type { Post } from '../types.ts'
 import { findRelated } from '../utils/related.ts'
+import { readingTime } from '@inkpaper/core/count-words'
 
 interface Props {
   wordCount: number
@@ -11,7 +12,6 @@ interface Props {
 }
 
 const { wordCount, tags, currentUrl, allPosts, relatedMap } = Astro.props
-const readingTime = Math.max(1, Math.ceil(wordCount / 400))
 const related = findRelated(currentUrl, tags, allPosts, relatedMap)
 ---
 
@@ -24,7 +24,7 @@ const related = findRelated(currentUrl, tags, allPosts, relatedMap)
         <div class="stat-label">字数</div>
       </div>
       <div>
-        <div class="stat-value">{readingTime} min</div>
+        <div class="stat-value">{readingTime(wordCount)}</div>
         <div class="stat-label">阅读</div>
       </div>
     </div>

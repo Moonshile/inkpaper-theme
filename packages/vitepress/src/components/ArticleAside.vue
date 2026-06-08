@@ -2,26 +2,13 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useData, useRoute, withBase } from 'vitepress'
 import { usePosts, useRelated } from '../composables/usePosts'
+import { countTextWords, readingTime } from '@inkpaper/core/count-words'
 
 const posts = usePosts()
 const relatedData = useRelated()
 
 const { page, frontmatter } = useData()
 const route = useRoute()
-
-const wordCount = ref(0)
-const readingTime = computed(() => Math.max(1, Math.ceil(wordCount.value / 400)))
-
-function countWords() {
-  const el = document.querySelector('.content-container .vp-doc')
-  if (el) {
-    const text = el.textContent || ''
-    wordCount.value = text.replace(/\s+/g, '').length
-  }
-}
-
-onMounted(countWords)
-watch(() => route.path, () => { setTimeout(countWords, 100) })
 
 const currentTags = computed(() => {
   return (frontmatter.value.tags || []) as string[]
@@ -30,6 +17,34 @@ const currentTags = computed(() => {
 const currentLink = computed(() => {
   return '/' + page.value.relativePath.replace(/\.md$/, '')
 })
+
+// Match the current post to reuse its pre-computed wordCount (same as list pages)
+const currentPost = computed(() => {
+  return posts.find(p => p.url === currentLink.value + '.html' || p.url === currentLink.value)
+})
+
+// Preferred: wordCount from pre-computed post data (consistent with list page)
+const preCount = computed(() => currentPost.value?.wordCount ?? 0)
+
+// Fallback: DOM textContent for pages not in the posts collection
+const domCount = ref(0)
+function updateDomCount() {
+  // Only query DOM when needed (as a fallback)
+  if (preCount.value > 0) {
+    domCount.value = preCount.value
+    return
+  }
+  const el = document.querySelector('.content-container .vp-doc')
+  if (el) {
+    domCount.value = countTextWords(el.textContent || '')
+  }
+}
+
+const wordCount = computed(() => preCount.value || domCount.value)
+const minutes = computed(() => readingTime(wordCount.value))
+
+onMounted(updateDomCount)
+watch(() => route.path, () => { setTimeout(updateDomCount, 100) })
 
 const related = computed(() => {
   const fromJson = relatedData[currentLink.value]
@@ -60,7 +75,7 @@ const related = computed(() => {
           <div class="stat-label">字数</div>
         </div>
         <div>
-          <div class="stat-value">{{ readingTime }} min</div>
+          <div class="stat-value">{{ minutes }}</div>
           <div class="stat-label">阅读</div>
         </div>
       </div>

@@ -1,13 +1,5 @@
 import { createContentLoader } from 'vitepress'
-
-function countWords(src) {
-  if (!src) return 0
-  const cleaned = src
-    .replace(/^---[\s\S]*?---/, '')
-    .replace(/[#*`\[\]()>_~|{}\-=]/g, '')
-    .replace(/\s+/g, '')
-  return cleaned.length
-}
+import { countWords } from '@inkpaper/core/count-words'
 
 /**
  * Create a VitePress content loader for blog posts.

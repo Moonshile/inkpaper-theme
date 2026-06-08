@@ -2,11 +2,7 @@
 import { computed } from 'vue'
 import { useData, withBase } from 'vitepress'
 import { usePosts } from '../composables/usePosts'
-
-function readingTime(wordCount: number): string {
-  const minutes = Math.max(1, Math.round(wordCount / 400))
-  return `${minutes} min`
-}
+import { readingTime } from '@inkpaper/core/count-words'
 
 const props = defineProps<{
   period?: string
