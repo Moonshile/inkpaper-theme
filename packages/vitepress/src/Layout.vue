@@ -61,6 +61,16 @@ onMounted(() => {
     document.addEventListener('mousemove', onMouseMove)
     document.addEventListener('mouseup', onMouseUp)
   })
+
+  // Auto-scroll active outline item into view
+  const marker = document.querySelector('.outline-marker') as HTMLElement | null
+  if (marker) {
+    const scrollActiveIntoView = () => {
+      const activeLink = document.querySelector('.VPDocAsideOutline .outline-link.active') as HTMLElement | null
+      activeLink?.scrollIntoView({ block: 'center' })
+    }
+    new MutationObserver(scrollActiveIntoView).observe(marker, { attributes: true, attributeFilter: ['style'] })
+  }
 })
 </script>
 

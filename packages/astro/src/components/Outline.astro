@@ -71,4 +71,89 @@ const { items, label = 'On this page' } = Astro.props
   .outline-link:hover {
     color: var(--ink);
   }
+
+  .outline-link.active {
+    color: var(--ink);
+  }
 </style>
+
+<script>
+  function initOutline() {
+    const outlineNav = document.querySelector<HTMLElement>('.VPDocAsideOutline')
+    if (!outlineNav) return
+
+    const allLinks = outlineNav.querySelectorAll<HTMLAnchorElement>('.outline-link')
+    // Build link map from actual heading IDs in the DOM (not pre-computed slugs)
+    const headingIds = new Set<string>()
+    document.querySelectorAll('.inkpaper-prose h2[id], .inkpaper-prose h3[id]').forEach(h => headingIds.add(h.id))
+
+    const linkMap = new Map<string, HTMLAnchorElement>()
+    allLinks.forEach(link => {
+      const id = link.getAttribute('href')?.replace('#', '')
+      if (id && headingIds.has(id)) {
+        linkMap.set(id, link)
+      } else if (id) {
+        // Try case-insensitive fallback (slug generation may differ)
+        for (const hid of headingIds) {
+          if (hid.toLowerCase() === id.toLowerCase()) {
+            linkMap.set(hid, link)
+            link.setAttribute('href', `#${hid}`)
+            break
+          }
+        }
+      }
+    })
+
+    let activeId: string | null = null
+
+    function setActive(id: string | null) {
+      if (id === activeId) return
+      if (activeId) {
+        linkMap.get(activeId)?.classList.remove('active')
+      }
+      if (id) {
+        const link = linkMap.get(id)
+        if (link) {
+          link.classList.add('active')
+          link.scrollIntoView({ block: 'center' })
+        }
+      }
+      activeId = id
+    }
+
+    const headings = Array.from(document.querySelectorAll<HTMLElement>('.inkpaper-prose h2[id], .inkpaper-prose h3[id]'))
+    if (headings.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find all currently intersecting headings
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .map(e => ({ id: e.target.id, top: e.target.getBoundingClientRect().top }))
+          .sort((a, b) => a.top - b.top)
+
+        if (visible.length > 0) {
+          setActive(visible[0].id)
+        } else {
+          // No heading in the active zone — find the last one above the viewport
+          let lastAbove: { id: string; top: number } | null = null
+          entries.forEach(e => {
+            const top = e.target.getBoundingClientRect().top
+            if (top < 0) {
+              if (!lastAbove || top > lastAbove.top) {
+                lastAbove = { id: e.target.id, top }
+              }
+            }
+          })
+          setActive(lastAbove?.id ?? null)
+        }
+      },
+      { rootMargin: '-80px 0px -60% 0px' }
+    )
+
+    headings.forEach(h => observer.observe(h))
+  }
+
+  document.addEventListener('DOMContentLoaded', initOutline)
+  document.addEventListener('astro:page-load', initOutline)
+</script>
