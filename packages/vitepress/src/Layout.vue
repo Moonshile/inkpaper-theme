@@ -80,6 +80,9 @@ onMounted(() => {
       <ArticleAside v-if="frontmatter.tags" />
     </template>
   </Layout>
+  <footer class="theme-credit">
+    <small>Themed by <a href="https://inkpaper.vercel.app/posts/2026-05-11-inkpaper-%E4%B8%BB%E9%A2%98%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B.html" target="_blank" rel="noopener">@inkpaper</a></small>
+  </footer>
 </template>
 
 <style scoped>
@@ -101,6 +104,37 @@ onMounted(() => {
   font-size: 14px;
   color: var(--vp-c-text-3);
   line-height: 24px;
+}
+
+.theme-credit {
+  text-align: center;
+  padding: 32px 16px 32px;
+  margin: 0 48px;
+  position: relative;
+  z-index: 70;
+  background: var(--vp-c-bg);
+}
+
+.theme-credit::before {
+  content: '';
+  display: block;
+  margin-bottom: 24px;
+  border-top: 1px solid var(--vermillion-faint);
+}
+
+.theme-credit small {
+  font-size: 0.75rem;
+  color: var(--vermillion-soft);
+  opacity: 0.45;
+}
+
+.theme-credit a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.theme-credit a:hover {
+  text-decoration: underline;
 }
 </style>
 
