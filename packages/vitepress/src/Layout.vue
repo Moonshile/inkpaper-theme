@@ -118,8 +118,7 @@ onMounted(() => {
 
 .theme-credit {
   text-align: center;
-  padding: 32px 16px 32px;
-  margin: 0 48px;
+  padding: 32px 16px;
   position: relative;
   z-index: 70;
   background: var(--vp-c-bg);
