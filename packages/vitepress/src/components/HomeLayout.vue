@@ -6,15 +6,17 @@ import { readingTime } from '@inkpaper/core/count-words'
 
 const { site } = useData()
 
-const themeMaxRecentPosts = (site.value.themeConfig as any)?.maxRecentPosts
-
 const props = withDefaults(defineProps<{
   maxTags?: number
   maxRecentPosts?: number
 }>(), {
   maxTags: 10,
-  maxRecentPosts: themeMaxRecentPosts ?? 10,
+  maxRecentPosts: 10,
 })
+
+const maxRecentPosts = computed(() =>
+  props.maxRecentPosts !== 10 ? props.maxRecentPosts : (site.value.themeConfig as any)?.maxRecentPosts ?? 10
+)
 
 const allPosts = usePosts()
 
@@ -39,7 +41,7 @@ const allTags = computed(() => {
 })
 
 const hotTags = computed(() => allTags.value.slice(0, props.maxTags))
-const recentPosts = computed(() => posts.value.slice(0, props.maxRecentPosts))
+const recentPosts = computed(() => posts.value.slice(0, maxRecentPosts.value))
 const lastUpdate = computed(() => posts.value[0]?.date || '-')
 </script>
 
