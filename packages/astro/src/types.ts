@@ -35,6 +35,10 @@ export interface InkpaperConfig {
   title?: string
   description?: string
   postsBase?: string
+  /** Directories under the posts collection to exclude from homepage recent posts. */
+  excludeDirs?: string[]
+  /** Max number of recent posts shown on the homepage. Default 10. */
+  maxRecentPosts?: number
   nav?: { text: string; link: string }[]
   sidebar?: SidebarOptions
   related?: Record<string, { link: string; title: string }[]>

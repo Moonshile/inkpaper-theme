@@ -5,10 +5,15 @@ import { getSortedPosts } from '../utils/posts.ts'
 import { getSidebarItems } from '../utils/sidebar.ts'
 import config from 'virtual:inkpaper-config'
 
-const posts = await getSortedPosts(config.postsBase)
+const allPosts = await getSortedPosts(config.postsBase)
+// Filter out posts from directories configured in excludeDirs
+const { excludeDirs } = config
+const posts = excludeDirs.length > 0
+  ? allPosts.filter(p => !excludeDirs.some(dir => p.slug.startsWith(dir + '/') || p.slug === dir))
+  : allPosts
 const sidebarItems = await getSidebarItems('home', config.sidebar, config.postsBase)
 ---
 
 <BaseLayout title={config.title} description={config.description} nav={config.nav} sidebarItems={sidebarItems} currentPath={Astro.url.pathname} inkEffect={config.inkEffect} inkEffectOpacity={config.inkEffectOpacity}>
-  <HomeLayout posts={posts} title={config.title} description={config.description} />
+  <HomeLayout posts={posts} title={config.title} description={config.description} maxRecentPosts={config.maxRecentPosts} />
 </BaseLayout>

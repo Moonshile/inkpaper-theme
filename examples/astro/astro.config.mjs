@@ -6,6 +6,8 @@ export default defineConfig({
     inkpaper({
       title: 'inkpaper',
       description: 'An ink-and-paper style Astro theme',
+      // excludeDirs: ['drafts', 'notes'],  // Directories to hide from homepage recent posts
+      // maxRecentPosts: 10,  // Max recent posts on homepage (default 10)
       inkEffect: 'bleedEdge',
       inkEffectOpacity: 0.8,
     }),

@@ -4,29 +4,43 @@ import { withBase, useData } from 'vitepress'
 import { usePosts } from '../composables/usePosts'
 import { readingTime } from '@inkpaper/core/count-words'
 
+const { site } = useData()
+
+const themeMaxRecentPosts = (site.value.themeConfig as any)?.maxRecentPosts
+
 const props = withDefaults(defineProps<{
   maxTags?: number
   maxRecentPosts?: number
 }>(), {
   maxTags: 10,
-  maxRecentPosts: 10,
+  maxRecentPosts: themeMaxRecentPosts ?? 10,
 })
 
-const { site } = useData()
+const allPosts = usePosts()
 
-const posts = usePosts()
+// Filter out posts from directories configured in themeConfig.excludeDirs
+const excludeDirs: string[] = (site.value.themeConfig as any)?.excludeDirs ?? []
 
-const totalPosts = computed(() => posts.length)
+function isExcluded(url: string): boolean {
+  if (excludeDirs.length === 0) return false
+  // Extract relative path from URL, e.g. /posts/drafts/my-post.html → drafts/my-post
+  const rel = url.replace(/\.html$/, '').replace(/^\/posts\//, '')
+  return excludeDirs.some(dir => rel.startsWith(dir + '/') || rel === dir)
+}
+
+const posts = computed(() => excludeDirs.length > 0 ? allPosts.filter(p => !isExcluded(p.url)) : allPosts)
+
+const totalPosts = computed(() => posts.value.length)
 
 const allTags = computed(() => {
   const map: Record<string, number> = {}
-  posts.forEach(p => p.tags.forEach(t => { map[t] = (map[t] || 0) + 1 }))
+  posts.value.forEach(p => p.tags.forEach(t => { map[t] = (map[t] || 0) + 1 }))
   return Object.entries(map).sort((a, b) => b[1] - a[1])
 })
 
 const hotTags = computed(() => allTags.value.slice(0, props.maxTags))
-const recentPosts = computed(() => posts.slice(0, props.maxRecentPosts))
-const lastUpdate = computed(() => posts[0]?.date || '-')
+const recentPosts = computed(() => posts.value.slice(0, props.maxRecentPosts))
+const lastUpdate = computed(() => posts.value[0]?.date || '-')
 </script>
 
 <template>

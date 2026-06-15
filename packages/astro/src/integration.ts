@@ -9,6 +9,8 @@ export default function inkpaper(config: InkpaperConfig = {}): AstroIntegration 
     title: config.title ?? 'inkpaper',
     description: config.description ?? '',
     postsBase: config.postsBase ?? '/posts',
+    excludeDirs: config.excludeDirs ?? [],
+    maxRecentPosts: config.maxRecentPosts ?? 10,
     nav: config.nav ?? [
       { text: 'Home', link: '/' },
       { text: 'Archive', link: '/archive' },
