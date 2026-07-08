@@ -8,6 +8,7 @@
     "./config": "./src/config.mjs",
     "./loader": "./src/loader.mjs",
     "./markdown": "./src/markdown.mjs",
+    "./plugin": "./src/plugin.mjs",
     "./types": "./src/types.ts"
   },
   "files": [

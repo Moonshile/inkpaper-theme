@@ -3,12 +3,16 @@ import path from 'node:path'
 // @ts-ignore — .mjs export
 import { generateSidebar } from '@inkpaper/vitepress/config'
 import { videoPlugin } from '@inkpaper/vitepress/markdown'
+import { imagePathPlugin } from '@inkpaper/vitepress/plugin'
 
 const postsDir = path.resolve(import.meta.dirname, '..', 'posts')
 
 export default defineConfig({
   title: 'My Blog',
   description: 'Powered by inkpaper',
+  vite: {
+    plugins: [imagePathPlugin()]
+  },
   markdown: {
     config(md) {
       md.use(videoPlugin)
