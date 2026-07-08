@@ -7,7 +7,7 @@
     ".": "./src/index.ts",
     "./config": "./src/config.mjs",
     "./loader": "./src/loader.mjs",
-    "./markdown": "./src/markdown.ts",
+    "./markdown": "./src/markdown.mjs",
     "./types": "./src/types.ts"
   },
   "files": [

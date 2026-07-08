@@ -1,5 +1,3 @@
-import type MarkdownIt from 'markdown-it'
-
 const VIDEO_EXTS = ['.mp4', '.webm', '.mov', '.avi', '.mkv']
 
 /**
@@ -12,8 +10,8 @@ const VIDEO_EXTS = ['.mp4', '.webm', '.mov', '.avi', '.mkv']
  *     markdown: { config(md) { md.use(videoPlugin) } }
  *   })
  */
-export function videoPlugin(md: MarkdownIt) {
-  const defaultImageRender = md.renderer.rules.image!
+export function videoPlugin(md) {
+  const defaultImageRender = md.renderer.rules.image
 
   md.renderer.rules.image = (tokens, idx, options, env, self) => {
     const token = tokens[idx]
