@@ -94,6 +94,28 @@ inkpaper({
 })
 ```
 
+## Video Embedding
+
+Markdown's native `![](url)` image syntax can be used to embed videos. When the URL ends with a video extension (`.mp4`, `.webm`, `.mov`, `.avi`, `.mkv`), the Astro integration's built-in remark plugin automatically converts the image node into a `<video>` element with `controls` enabled.
+
+```md
+![](demo.mp4)
+```
+
+No configuration needed — the `remarkVideo` plugin is automatically applied by the `@inkpaper/astro` integration. If you need to use it standalone:
+
+```ts
+import { remarkVideo } from '@inkpaper/astro'
+```
+
+The `alt` text or `title` attribute is used as the video's `title` attribute:
+
+```md
+![A walkthrough of the ink effect](demo.mp4)
+```
+
+Both image and video elements share the same responsive styling (max-width, border-radius) defined in `@inkpaper/core`.
+
 ## Automatic Route Injection
 
 The Astro version uses the `injectRoute` API to automatically inject four default page routes:

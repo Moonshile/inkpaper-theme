@@ -65,6 +65,7 @@ See the example site source for detailed configuration: [examples/vitepress](./e
 - **Configurable sidebar** — per-page-type control over visibility and tree type (directory or date)
 - **Home / Archive / Tags** — three ready-to-use page components
 - **Article aside** — word count, reading time, tags, related article recommendations
+- **Video embedding** — `![](video.mp4)` markdown syntax automatically renders as `<video>` tags, supports mp4/webm/mov
 - **Shared design system** — `@inkpaper/core` provides unified colors, typography, and texture across both framework implementations
 - **Astro automatic route injection** — integration injects default page routes, no scaffolding needed
 - **VitePress scaffolding tool** — `npx @inkpaper/create-for-vitepress` for one-command VitePress project initialization

@@ -102,7 +102,8 @@
   margin: 2rem 0;
 }
 
-.inkpaper-prose img {
+.inkpaper-prose img,
+.inkpaper-prose video {
   max-width: 100%;
   border-radius: 4px;
 }

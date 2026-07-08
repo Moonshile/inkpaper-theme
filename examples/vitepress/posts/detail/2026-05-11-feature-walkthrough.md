@@ -98,6 +98,36 @@ The count recalculates on route change, with a 100ms `setTimeout` to wait for DO
 }
 ```
 
+## Video Embedding
+
+Markdown's native `![](url)` image syntax can be used to embed videos. When the URL ends with a video extension (`.mp4`, `.webm`, `.mov`, `.avi`, `.mkv`), the markdown renderer automatically outputs a `<video>` element with `controls` enabled instead of an `<img>` tag.
+
+```md
+![](demo.mp4)
+```
+
+To use this feature, enable the video plugin in your VitePress config:
+
+```ts
+import { videoPlugin } from '@inkpaper/vitepress/markdown'
+
+export default defineConfig({
+  markdown: {
+    config(md) {
+      md.use(videoPlugin)
+    }
+  }
+})
+```
+
+The `alt` text or `title` attribute is used as the video's `title` attribute:
+
+```md
+![A walkthrough of the ink effect](demo.mp4)
+```
+
+Both image and video elements share the same responsive styling (max-width, border-radius) defined in `@inkpaper/core`.
+
 ## Content Loader
 
 The theme provides `createPostsLoader`, imported from `@inkpaper/vitepress/loader`:

@@ -1,12 +1,13 @@
 {
   "name": "@inkpaper/vitepress",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "type": "module",
   "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
     "./config": "./src/config.mjs",
     "./loader": "./src/loader.mjs",
+    "./markdown": "./src/markdown.ts",
     "./types": "./src/types.ts"
   },
   "files": [

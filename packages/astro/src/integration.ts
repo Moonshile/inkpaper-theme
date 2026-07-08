@@ -1,5 +1,6 @@
 import type { AstroIntegration } from 'astro'
 import type { InkpaperConfig } from './types.ts'
+import { remarkVideo } from './remark-video.ts'
 
 const RESOLVED_VIRTUAL_ID = '\0virtual:inkpaper-config'
 const VIRTUAL_ID = 'virtual:inkpaper-config'
@@ -52,6 +53,9 @@ export default function inkpaper(config: InkpaperConfig = {}): AstroIntegration 
         })
 
         updateConfig({
+          markdown: {
+            remarkPlugins: [remarkVideo],
+          },
           vite: {
             plugins: [
               {

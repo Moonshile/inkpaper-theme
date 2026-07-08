@@ -65,6 +65,7 @@ export const collections = {
 - **可配置侧边栏** — 按页面类型独立控制显示与否、目录树或日期树
 - **首页/归档/标签** — 三个开箱即用的页面组件
 - **文章侧边栏** — 字数统计、阅读时间、标签、相关文章推荐
+- **视频嵌入** — Markdown 图片语法 `![](video.mp4)` 自动渲染为 `<video>` 标签，支持 mp4/webm/mov
 - **共享设计系统** — `@inkpaper/core` 提供统一的色彩、排版、纹理，两套框架实现视觉一致
 - **Astro 路由自动注入** — 集成自动注入默认页面路由，无需脚手架
 - **VitePress 脚手架工具** — `npx @inkpaper/create-for-vitepress` 一键初始化 VitePress 项目
